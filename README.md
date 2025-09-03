@@ -149,6 +149,31 @@ SAM_EXCL_API_KEY=reserved_for_future
 
 ### Deployment Steps
 
+✅ **Production Deployment Complete**
+
+The application is fully deployed on Railway with the following services:
+
+1. **Web Service**: Next.js application
+   - Start Command: `pnpm -C apps/web start`
+   - URL: https://web-production-8e472.up.railway.app
+   - Build: Auto from GitHub main branch
+
+2. **Worker Service**: Background job processor  
+   - Start Command: `pnpm -C packages/worker start`
+   - Environment: `NIXPACKS_START_CMD=pnpm -C packages/worker start`
+   - Build: Auto from GitHub main branch
+
+3. **Cron-Digest Service**: Scheduled daily digest
+   - Start Command: `pnpm -w run cron:opps`
+   - Schedule: Daily at 1 PM UTC
+   - Build: Auto from GitHub main branch
+
+4. **PostgreSQL Database**: Railway managed database
+   - Connection: Automatic via `DATABASE_URL`
+   - Backups: Managed by Railway
+
+#### Manual Setup (if recreating):
+
 1. **Install Railway CLI**
    ```bash
    npm install -g @railway/cli
@@ -165,28 +190,24 @@ SAM_EXCL_API_KEY=reserved_for_future
    railway add --database postgresql
    ```
 
-4. **Deploy Web Service**
+4. **Deploy Services**
    ```bash
    railway up --service web
+   railway up --service worker
+   railway up --service cron-digest
    ```
 
-5. **Deploy Worker Service**
+5. **Configure Worker Service**
    ```bash
-   railway up --service worker
+   railway variables --set "NIXPACKS_START_CMD=pnpm -C packages/worker start" --service worker
    ```
 
 6. **Set Environment Variables**
    ```bash
    railway variables --set "RESEND_API_KEY=your_key" --service web
    railway variables --set "STRIPE_SECRET_KEY=your_key" --service web
-   # Repeat for all variables and both services
+   # Repeat for all required variables
    ```
-
-7. **Setup Cron Job**
-   - Go to Railway Dashboard
-   - Create new Cron Service
-   - Schedule: `0 13 * * *`
-   - Command: `pnpm -w run cron:opps`
 
 ## 💳 Stripe Integration
 
@@ -640,11 +661,18 @@ For technical support or questions:
 
 ## 📊 Current Status
 
-✅ **MVP Complete**: All core features implemented and tested  
-✅ **Production Ready**: Deployed on Railway with monitoring  
+✅ **Production Deployed**: All services running on Railway  
+✅ **Web Application**: Next.js app deployed at `web-production-8e472.up.railway.app`  
+✅ **Worker Service**: Background job processing active  
+✅ **Cron Service**: Daily digest automation operational  
+✅ **Database**: PostgreSQL connected and functional  
 ✅ **Payment Integration**: Stripe subscriptions working  
 ✅ **Email Delivery**: Resend integration functional  
-✅ **Cron Scheduling**: Automated daily digest system  
-🔄 **Final Setup**: Railway cron service creation required  
+✅ **Auto-deployment**: GitHub connected to Railway  
 
-**Ready for production use!** 🚀
+**Fully operational and ready for users!** 🚀
+
+### Service URLs
+- **Web App**: https://web-production-8e472.up.railway.app
+- **GitHub**: https://github.com/rozetyp/SAM-contract
+- **Railway Project**: bidbeacon-dev (production environment)

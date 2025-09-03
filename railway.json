@@ -1,15 +1,13 @@
 {
   "build": {
-    "builder": "NIXPACKS",
-    "buildCommand": "pnpm install && pnpm build"
+    "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "pnpm -w run cron:opps",
+    "startCommand": "$RAILWAY_START_COMMAND",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   },
   "cron": {
-    "enabled": true,
     "schedule": "0 13 * * *",
     "command": "pnpm -w run cron:opps"
   }
