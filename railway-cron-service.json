@@ -1,20 +1,16 @@
 {
   "build": {
-    "builder": "NIXPACKS"
+    "builder": "NIXPACKS",
+    "buildCommand": "pnpm install && pnpm build"
   },
   "deploy": {
+    "startCommand": "pnpm -w run cron:opps",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   },
   "cron": {
     "enabled": true,
     "schedule": "0 13 * * *",
-  "command": "pnpm -w run cron:run"
-  },
-  "healthcheck": {
-    "command": "pnpm run cron:health",
-    "interval": "30s",
-    "timeout": "10s",
-    "retries": 3
+    "command": "pnpm -w run cron:opps"
   }
 }
