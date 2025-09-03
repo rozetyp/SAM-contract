@@ -12,6 +12,9 @@
     },
     "cron-digest": {
       "startCommand": "pnpm -w run cron:run"
+    },
+    "worker": {
+      "startCommand": "pnpm -C packages/worker start"
     }
   },
   "cron": {
