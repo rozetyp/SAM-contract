@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "pnpm -C apps/web dev",
-  "build": "pnpm -C packages/db build && pnpm -C apps/web build && pnpm -C packages/worker build",
+    "build": "pnpm -C packages/db build && pnpm -C packages/emails build && pnpm -C apps/web build && pnpm -C packages/worker build",
     "start": "pnpm -C apps/web start",
     "db:generate": "pnpm -C packages/db db:generate",
     "db:migrate": "pnpm -C packages/db db:migrate",
