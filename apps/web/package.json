@@ -11,16 +11,17 @@
     "test": "vitest run"
   },
   "dependencies": {
-  "@sam/db": "workspace:*",
+    "@sam/db": "workspace:*",
+    "drizzle-orm": "^0.33.0",
     "next": "^14.2.7",
+    "pg": "^8.12.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "zod": "^3.23.8",
-    "stripe": "^16.2.0",
+    "react-icons": "^5.5.0",
     "resend": "^4.0.0",
-    "drizzle-orm": "^0.33.0",
-    "pg": "^8.12.0",
-    "undici": "^6.19.8"
+    "stripe": "^16.2.0",
+    "undici": "^6.19.8",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^22.5.4",
