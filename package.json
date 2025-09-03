@@ -13,7 +13,9 @@
     "db:generate": "pnpm -C packages/db db:generate",
     "db:migrate": "pnpm -C packages/db db:migrate",
     "cron:opps": "pnpm -C packages/worker cron:opps",
+    "cron:run": "pnpm -C packages/worker cron:opps",
     "cron:health": "node cron-health.js",
+    "worker:cron:run": "pnpm --filter @sam/worker run cron:run",
     "test": "vitest run"
   },
   "workspaces": [
