@@ -2,6 +2,7 @@
 
 A micro-SaaS application that delivers personalized government contract opportunities from SAM.gov directly to your inbox. Users can set up custom search criteria and receive daily email digests with relevant federal contracting opportunities.
 
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-black?style=flat&logo=github)](https://github.com/rozetyp/SAM-contract)
 ![Next.js](https://img.shields.io/badge/Next.js-14.2-black?style=flat&logo=nextdotjs)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue?style=flat&logo=typescript)
 ![Railway](https://img.shields.io/badge/Railway-Deployed-purple?style=flat&logo=railway)
