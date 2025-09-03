@@ -10,4 +10,3 @@ build
 .venv
 coverage
 *.log
-pnpm-*.yaml
