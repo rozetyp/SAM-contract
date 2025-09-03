@@ -5,9 +5,10 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-  "build": "tsup src/index.ts src/jobs/opps.ts --format esm,cjs --clean",
+    "build": "tsup src/index.ts src/jobs/opps.ts --format esm,cjs --clean",
     "start": "node dist/jobs/opps.js",
-    "cron:opps": "node dist/jobs/opps.js"
+    "cron:opps": "node dist/jobs/opps.js",
+    "cron:run": "pnpm -w run cron:opps"
   },
   "dependencies": {
     "@sam/db": "workspace:*",
