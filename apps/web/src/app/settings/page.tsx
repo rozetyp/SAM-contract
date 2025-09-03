@@ -4,7 +4,75 @@ import MultiSelect from '../../components/MultiSelect';
 import { naicsCodes } from '../../lib/naics-codes';
 import { pscCodes } from '../../lib/psc-codes';
 import { setAsidePrograms } from '../../lib/setaside-programs';
-import { federalAgencies } from '../../lib/federal-agencies';
+
+// Reusable style objects
+const pageStyle = {
+  fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  lineHeight: '1.6',
+  color: '#333',
+  backgroundColor: '#fff',
+  maxWidth: '800px',
+  margin: '0 auto',
+  padding: '40px 20px'
+};
+
+const formGroupStyle = { marginBottom: '24px' };
+
+const labelStyle = {
+  display: 'block',
+  marginBottom: '8px',
+  fontWeight: '600',
+  fontSize: '16px',
+  color: '#333'
+};
+
+const pStyle = {
+  margin: '0 0 12px',
+  fontSize: '14px',
+  color: '#666'
+};
+
+const inputStyle = {
+  display: 'block',
+  width: '100%',
+  padding: '12px 16px',
+  border: '1px solid #e9ecef',
+  borderRadius: '8px',
+  fontSize: '14px',
+  boxSizing: 'border-box' as 'border-box'
+};
+
+const baseButtonStyle = {
+  padding: '12px 24px',
+  border: 'none',
+  borderRadius: '8px',
+  fontSize: '16px',
+  fontWeight: '600',
+  cursor: 'pointer',
+  transition: 'transform 0.2s, box-shadow 0.2s'
+};
+
+const primaryButtonStyle = {
+  ...baseButtonStyle,
+  backgroundColor: '#667eea',
+  color: 'white',
+  boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+};
+
+const secondaryButtonStyle = {
+  ...baseButtonStyle,
+  backgroundColor: '#f8f9fa',
+  color: '#333',
+  border: '1px solid #e9ecef'
+};
+
+const disabledButtonStyle = {
+  ...primaryButtonStyle,
+  backgroundColor: '#ccc',
+  cursor: 'not-allowed',
+  boxShadow: 'none',
+  transform: 'none'
+};
 
 export default function SettingsPage() {
   const [email, setEmail] = useState('');
@@ -13,53 +81,39 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check health status
-    fetch('/api/health')
-      .then((r) => r.json())
-      .then((j) => {
-        const ok = j?.lastCron?.ok !== false; // if undefined or true -> no failure banner
-        setCronFailed(!ok);
-      })
-      .catch(() => {});
+    fetch('/api/health').then(r => r.json()).then(j => {
+      setCronFailed(j?.lastCron?.ok === false);
+    }).catch(() => {});
   }, []);
 
-  // Check current user status and load existing settings when email changes
   useEffect(() => {
     if (!email.trim()) {
       setPaid(false);
       setLoading(false);
       return;
     }
-
     setLoading(true);
-    // Load existing settings
     fetch('/api/settings', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ email: email.trim() })
-    })
-      .then((resp) => resp.json())
-      .then((j) => {
-        if (j.plan === 'paid') {
-          setPaid(true);
-          // Load existing search criteria if available
-          if (j.search) {
-            setSelectedNaics(j.search.naics || []);
-            setPscCodes(j.search.psc || []);
-            setSelectedSetAside(j.search.setaside || []);
-            setSelectedAgency(j.search.agency || '');
-            setIncludeWords(j.search.includeWords || '');
-            setExcludeWords(j.search.excludeWords || '');
-          }
-        } else {
-          setPaid(false);
+    }).then(resp => resp.json()).then(j => {
+      if (j.plan === 'paid') {
+        setPaid(true);
+        if (j.search) {
+          setSelectedNaics(j.search.naics || []);
+          setPscCodes(j.search.psc || []);
+          setSelectedSetAside(j.search.setaside || []);
+          setSelectedAgency(j.search.agency || '');
+          setIncludeWords(j.search.includeWords || '');
+          setExcludeWords(j.search.excludeWords || '');
         }
-      })
-      .catch(() => setPaid(false))
-      .finally(() => setLoading(false));
+      } else {
+        setPaid(false);
+      }
+    }).catch(() => setPaid(false)).finally(() => setLoading(false));
   }, [email]);
 
-  // Guided filter states
   const [selectedNaics, setSelectedNaics] = useState<string[]>([]);
   const [selectedPsc, setPscCodes] = useState<string[]>([]);
   const [selectedSetAside, setSelectedSetAside] = useState<string[]>([]);
@@ -67,339 +121,150 @@ export default function SettingsPage() {
   const [includeWords, setIncludeWords] = useState('');
   const [excludeWords, setExcludeWords] = useState('');
   
-  // Preview state
   const [previewData, setPreviewData] = useState<any>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
 
-  // Auto-preview when criteria changes
   useEffect(() => {
-    if (!selectedNaics.length && !selectedPsc.length && !selectedSetAside.length && !selectedAgency && !includeWords && !excludeWords) {
+    const hasCriteria = selectedNaics.length || selectedPsc.length || selectedSetAside.length || selectedAgency || includeWords || excludeWords;
+    if (!hasCriteria) {
       setPreviewData(null);
       return;
     }
-
     const debounceTimer = setTimeout(() => {
       setPreviewLoading(true);
       fetch('/api/preview', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          naics: selectedNaics,
-          psc: selectedPsc,
-          setaside: selectedSetAside,
-          agency: selectedAgency,
-          includeWords,
-          excludeWords
-        })
-      })
-      .then(r => r.json())
-      .then(data => setPreviewData(data))
-      .catch(() => setPreviewData(null))
-      .finally(() => setPreviewLoading(false));
-    }, 1000); // 1 second debounce
-
+        body: JSON.stringify({ naics: selectedNaics, psc: selectedPsc, setaside: selectedSetAside, agency: selectedAgency, includeWords, excludeWords })
+      }).then(r => r.json()).then(setPreviewData).catch(() => setPreviewData(null)).finally(() => setPreviewLoading(false));
+    }, 500);
     return () => clearTimeout(debounceTimer);
   }, [selectedNaics, selectedPsc, selectedSetAside, selectedAgency, includeWords, excludeWords]);
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const resp = await fetch('/api/settings', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ email, naics: selectedNaics, psc: selectedPsc, setaside: selectedSetAside, agency: selectedAgency, includeWords, excludeWords })
+    });
+    const j = await resp.json();
+    if (resp.status === 402) {
+      setPaid(false);
+      alert('Subscription required to save settings.');
+      return;
+    }
+    if (resp.ok) {
+      setPaid(true);
+      alert('Settings saved successfully!');
+    } else {
+      alert(`Error: ${j?.error || 'unknown'}`);
+    }
+  };
+
+  const handleStripeCheckout = () => {
+    fetch('/api/stripe/checkout', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ email })
+    }).then(r => r.json()).then(d => {
+      if (d.url) window.location.href = d.url;
+    });
+  };
+
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
-      <h2>BidBeacon Settings</h2>
-      {/* Force rebuild - v2 */}
-      {cronFailed && (
-        <div style={{ margin: '12px 0', padding: 12, background: '#f8d7da', borderRadius: '4px' }}>
-          Last cron run failed. Please check logs.
-        </div>
-      )}
+    <div style={pageStyle}>
+      <h1 style={{ textAlign: 'center', marginBottom: '40px', fontSize: '36px' }}>BidBeacon Settings</h1>
       
-      {!paid && email && (
-        <div style={{ margin: '12px 0', padding: 16, background: '#fff3cd', borderRadius: '4px', border: '1px solid #ffeaa7' }}>
-          <h4 style={{ margin: '0 0 8px', color: '#856404' }}>🚀 Subscribe to Start</h4>
-          <p style={{ margin: '0', fontSize: '14px', color: '#856404' }}>
-            Configure your perfect search criteria below and preview results. <strong>Subscribe to save your settings and receive daily email digests.</strong>
-          </p>
-        </div>
-      )}
+      {cronFailed && <div style={{ margin: '16px 0', padding: 16, background: '#f8d7da', borderRadius: '8px' }}>Last cron run failed. Please check logs.</div>}
       
-      <form
-        onSubmit={async (e) => {
-          e.preventDefault();
-          const resp = await fetch('/api/settings', {
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify({ 
-              email, 
-              naics: selectedNaics, 
-              psc: selectedPsc, 
-              setaside: selectedSetAside,
-              agency: selectedAgency,
-              includeWords: includeWords,
-              excludeWords: excludeWords
-            })
-          });
-          const j = await resp.json();
-          if (resp.status === 402) {
-            setPaid(false);
-            alert('Subscription required to save settings.');
-            return;
-          }
-          if (resp.ok) {
-            setPaid(true);
-            alert('Settings saved successfully!');
-          } else {
-            alert(`Error: ${j?.error || 'unknown'}`);
-          }
-        }}
-      >
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
-            Email Address
-          </label>
-          <input 
-            type="email"
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
-            required 
-            style={{ 
-              display: 'block', 
-              width: '100%', 
-              padding: '8px 12px',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-              fontSize: '14px'
-            }} 
-            placeholder="your.email@company.com"
-          />
+      <form onSubmit={handleSubmit}>
+        <div style={formGroupStyle}>
+          <label style={labelStyle}>Email Address</label>
+          <p style={pStyle}>Enter your email to load settings and manage your subscription.</p>
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required style={inputStyle} placeholder="your.email@company.com" />
         </div>
         
-        {loading && email.trim() && (
-          <div style={{ margin: '12px 0', padding: 12, background: '#d1ecf1', borderRadius: '4px' }}>
-            Checking subscription status...
-          </div>
-        )}
-        
-        {!loading && !paid && email.trim() && (
-          <div style={{ margin: '12px 0', padding: 12, background: '#fff3cd', borderRadius: '4px' }}>
-            💳 <strong>Trial Mode:</strong> You can configure your search criteria below, but you'll need a paid subscription to save them and receive daily digests.
-          </div>
-        )}
-        
-        {!loading && paid && (
-          <div style={{ margin: '12px 0', padding: 12, background: '#d4edda', borderRadius: '4px' }}>
-            ✅ Subscription active! Configure your search filters below.
-          </div>
-        )}
+        {loading && email.trim() && <div style={{ margin: '16px 0', padding: 16, background: '#e3f2fd', borderRadius: '8px' }}>Checking subscription status...</div>}
+        {!loading && !paid && email.trim() && <div style={{ margin: '16px 0', padding: 16, background: '#fff3cd', borderRadius: '8px' }}><strong>Trial Mode:</strong> Configure your search below, but you'll need a paid subscription to save and receive digests.</div>}
+        {!loading && paid && <div style={{ margin: '16px 0', padding: 16, background: '#d4edda', borderRadius: '8px' }}>✅ Subscription active! Configure your search filters below.</div>}
 
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
-            🏭 Industry (NAICS Codes)
-          </label>
-          <p style={{ margin: '0 0 8px', fontSize: '13px', color: '#666' }}>
-            Select the industries you want to monitor for contract opportunities
-          </p>
-          <div style={{ opacity: paid ? 1 : 0.7 }}>
-            <MultiSelect
-              options={naicsCodes}
-              value={selectedNaics}
-              onChange={setSelectedNaics}
-              placeholder="Select NAICS codes (e.g., 541511 - Software Development)"
-              groupBy="sector"
-              searchable={true}
-            />
+        <div style={{ ...formGroupStyle, opacity: paid ? 1 : 0.7 }}>
+          <label style={labelStyle}>🏭 Industry (NAICS Codes)</label>
+          <p style={pStyle}>Select the industries you want to monitor for contract opportunities.</p>
+          <MultiSelect options={naicsCodes} value={selectedNaics} onChange={setSelectedNaics} placeholder="Select NAICS codes (e.g., 541511 - Software Development)" groupBy="sector" searchable={true} />
+        </div>
+
+        <div style={{ ...formGroupStyle, opacity: paid ? 1 : 0.7 }}>
+          <label style={labelStyle}>🛠️ Product/Service (PSC Codes)</label>
+          <p style={pStyle}>Choose specific product or service categories.</p>
+          <MultiSelect options={pscCodes} value={selectedPsc} onChange={setPscCodes} placeholder="Select PSC codes (e.g., D316 - Software Programming)" groupBy="category" searchable={true} />
+        </div>
+
+        <div style={{ ...formGroupStyle, opacity: paid ? 1 : 0.7 }}>
+          <label style={labelStyle}>🎯 Set-Aside Programs</label>
+          <p style={pStyle}>Filter by small business set-aside programs (optional).</p>
+          <MultiSelect options={setAsidePrograms} value={selectedSetAside} onChange={setSelectedSetAside} placeholder="Select set-aside programs (e.g., SBA, WOSB, 8A)" searchable={true} />
+        </div>
+
+        <div style={{ ...formGroupStyle, opacity: paid ? 1 : 0.7 }}>
+          <label style={labelStyle}>🏛️ Federal Agency (Optional)</label>
+          <p style={pStyle}>Filter by specific agency name or code.</p>
+          <input type="text" value={selectedAgency} onChange={(e) => setSelectedAgency(e.target.value)} style={inputStyle} placeholder="e.g., GSA, Department of Defense, 97" />
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', ...formGroupStyle, opacity: paid ? 1 : 0.7 }}>
+          <div>
+            <label style={labelStyle}>✅ Include Keywords</label>
+            <p style={pStyle}>Must contain these words.</p>
+            <input type="text" value={includeWords} onChange={(e) => setIncludeWords(e.target.value)} style={inputStyle} placeholder="e.g., cloud, cybersecurity" />
+          </div>
+          <div>
+            <label style={labelStyle}>❌ Exclude Keywords</label>
+            <p style={pStyle}>Must NOT contain these words.</p>
+            <input type="text" value={excludeWords} onChange={(e) => setExcludeWords(e.target.value)} style={inputStyle} placeholder="e.g., construction, janitorial" />
           </div>
         </div>
 
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
-            🛠️ Product/Service (PSC Codes)
-          </label>
-          <p style={{ margin: '0 0 8px', fontSize: '13px', color: '#666' }}>
-            Choose specific product or service categories
-          </p>
-          <div style={{ opacity: paid ? 1 : 0.7 }}>
-            <MultiSelect
-              options={pscCodes}
-              value={selectedPsc}
-              onChange={setPscCodes}
-              placeholder="Select PSC codes (e.g., D316 - Software Programming)"
-              groupBy="category"
-              searchable={true}
-            />
-          </div>
-        </div>
-
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
-            🎯 Set-Aside Programs
-          </label>
-          <p style={{ margin: '0 0 8px', fontSize: '13px', color: '#666' }}>
-            Filter by small business set-aside programs (optional)
-          </p>
-          <div style={{ opacity: paid ? 1 : 0.7 }}>
-            <MultiSelect
-              options={setAsidePrograms}
-              value={selectedSetAside}
-              onChange={setSelectedSetAside}
-              placeholder="Select set-aside programs (e.g., SBA, WOSB, 8A)"
-              searchable={true}
-            />
-          </div>
-        </div>
-
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
-            🏛️ Federal Agency (Optional)
-          </label>
-          <p style={{ margin: '0 0 8px', fontSize: '13px', color: '#666' }}>
-            Filter by specific agency name or code
-          </p>
-          <input 
-            type="text"
-            value={selectedAgency}
-            onChange={(e) => setSelectedAgency(e.target.value)}
-            style={{ 
-              display: 'block', 
-              width: '100%', 
-              padding: '8px 12px',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-              fontSize: '14px',
-              opacity: paid ? 1 : 0.7
-            }}
-            placeholder="Agency name or code (e.g., GSA, Department of Defense, 97)"
-          />
-        </div>
-
-        {/* Live Preview Section */}
         {(selectedNaics.length > 0 || selectedPsc.length > 0 || selectedSetAside.length > 0 || selectedAgency || includeWords || excludeWords) && (
-          <div style={{ marginBottom: '20px', padding: '16px', backgroundColor: '#f8f9fa', borderRadius: '4px', border: '1px solid #e9ecef' }}>
-            <h4 style={{ margin: '0 0 12px', fontSize: '16px', color: '#495057' }}>
-              📊 Live Preview - Last 7 Days
-            </h4>
+          <div style={{ marginBottom: '24px', padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #e9ecef' }}>
+            <h4 style={{ margin: '0 0 16px', fontSize: '18px', color: '#333' }}>📊 Live Preview (Last 7 Days)</h4>
             {previewLoading ? (
-              <div style={{ color: '#666', fontStyle: 'italic' }}>Loading preview...</div>
+              <div style={{ color: '#666' }}>Loading preview...</div>
             ) : previewData ? (
               <div>
-                <div style={{ marginBottom: '8px' }}>
+                <div style={{ marginBottom: '12px', fontSize: '16px' }}>
                   <strong>{previewData.filteredCount}</strong> opportunities found out of {previewData.totalRecords} total
                 </div>
-                {previewData.sampleTitles && previewData.sampleTitles.length > 0 && (
+                {previewData.sampleTitles?.length > 0 && (
                   <div>
-                    <div style={{ fontSize: '14px', color: '#666', marginBottom: '6px' }}>Sample opportunities:</div>
-                    <ul style={{ margin: '0', paddingLeft: '20px', fontSize: '13px' }}>
-                      {previewData.sampleTitles.map((title: string, idx: number) => (
-                        <li key={idx} style={{ marginBottom: '2px' }}>{title}</li>
-                      ))}
+                    <div style={{ fontSize: '14px', color: '#666', marginBottom: '8px' }}>Sample opportunities:</div>
+                    <ul style={{ margin: '0', paddingLeft: '20px', fontSize: '14px', color: '#555' }}>
+                      {previewData.sampleTitles.map((title: string, idx: number) => <li key={idx} style={{ marginBottom: '4px' }}>{title}</li>)}
                     </ul>
                   </div>
                 )}
               </div>
             ) : (
-              <div style={{ color: '#666', fontStyle: 'italic' }}>Configure your criteria above to see a preview</div>
+              <div style={{ color: '#666' }}>Configure criteria to see a preview.</div>
             )}
           </div>
         )}
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
-              ✅ Include Keywords (Optional)
-            </label>
-            <p style={{ margin: '0 0 8px', fontSize: '13px', color: '#666' }}>
-              Must contain these words
-            </p>
-            <input 
-              type="text"
-              value={includeWords}
-              onChange={(e) => setIncludeWords(e.target.value)}
-              style={{ 
-                display: 'block', 
-                width: '100%', 
-                padding: '8px 12px',
-                border: '1px solid #ccc',
-                borderRadius: '4px',
-                fontSize: '14px',
-                opacity: paid ? 1 : 0.7
-              }}
-              placeholder="cloud, cybersecurity, AI"
-            />
-          </div>
-          
-          <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
-              ❌ Exclude Keywords (Optional)
-            </label>
-            <p style={{ margin: '0 0 8px', fontSize: '13px', color: '#666' }}>
-              Must NOT contain these words
-            </p>
-            <input 
-              type="text"
-              value={excludeWords}
-              onChange={(e) => setExcludeWords(e.target.value)}
-              style={{ 
-                display: 'block', 
-                width: '100%', 
-                padding: '8px 12px',
-                border: '1px solid #ccc',
-                borderRadius: '4px',
-                fontSize: '14px',
-                opacity: paid ? 1 : 0.7
-              }}
-              placeholder="construction, janitorial"
-            />
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
-          <button 
-            type="submit" 
-            disabled={!paid}
-            style={{
-              padding: '12px 24px',
-              backgroundColor: paid ? '#2196f3' : '#ccc',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              fontSize: '16px',
-              fontWeight: 'bold',
-              cursor: paid ? 'pointer' : 'not-allowed'
-            }}
-          >
+        <div style={{ display: 'flex', gap: '16px', marginTop: '32px', borderTop: '1px solid #e9ecef', paddingTop: '32px' }}>
+          <button type="submit" disabled={!paid} style={paid ? primaryButtonStyle : disabledButtonStyle}>
             Save Search Criteria
           </button>
-          
-          <button
-            type="button"
-            onClick={(e) => { 
-              e.preventDefault(); 
-              fetch('/api/stripe/checkout', { 
-                method: 'POST', 
-                headers: { 'content-type': 'application/json' }, 
-                body: JSON.stringify({ email }) 
-              }).then(r => r.json()).then(d => { 
-                if (d.url) window.location.href = d.url; 
-              }); 
-            }}
-            style={{
-              padding: '12px 24px',
-              backgroundColor: '#ff9800',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              fontSize: '16px',
-              fontWeight: 'bold',
-              cursor: 'pointer'
-            }}
-          >
+          <button type="button" onClick={handleStripeCheckout} style={secondaryButtonStyle}>
             {paid ? 'Manage Subscription' : 'Subscribe ($19/month)'}
           </button>
         </div>
 
         {paid && (
-          <div style={{ marginTop: '20px', padding: '16px', backgroundColor: '#f8f9fa', borderRadius: '4px', fontSize: '14px' }}>
-            <h4 style={{ margin: '0 0 8px' }}>📧 Daily Digest Schedule</h4>
+          <div style={{ marginTop: '24px', padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px', fontSize: '14px' }}>
+            <h4 style={{ margin: '0 0 8px', fontSize: '16px' }}>📧 Daily Digest Schedule</h4>
             <p style={{ margin: '0' }}>
-              You'll receive your personalized SAM.gov contract digest daily at <strong>1:00 PM UTC</strong> 
-              ({new Date().toLocaleString()} local time). Only new opportunities matching your criteria will be sent.
+              You'll receive your personalized SAM.gov contract digest daily at <strong>1:00 PM UTC</strong>.
             </p>
           </div>
         )}
