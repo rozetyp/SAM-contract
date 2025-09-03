@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { FaCheck, FaTimes, FaEnvelope, FaFilter, FaClock } from 'react-icons/fa';
 
 const ComparisonTable = () => (
@@ -277,9 +278,10 @@ const SampleEmailModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
 
 export default function LandingPage() {
   const [showSampleEmail, setShowSampleEmail] = useState(false);
+  const router = useRouter();
 
   const handleStartSubscription = () => {
-    window.location.href = '/settings';
+    router.push('/settings');
   };
 
   return (
