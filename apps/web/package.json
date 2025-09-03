@@ -1,0 +1,34 @@
+{
+  "name": "web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "vitest run"
+  },
+  "dependencies": {
+  "@sam/db": "workspace:*",
+    "next": "^14.2.7",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zod": "^3.23.8",
+    "stripe": "^16.2.0",
+    "resend": "^4.0.0",
+    "drizzle-orm": "^0.33.0",
+    "pg": "^8.12.0",
+    "undici": "^6.19.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.4",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "eslint": "^9.10.0",
+    "eslint-config-next": "^14.2.7",
+    "typescript": "^5.6.2",
+    "vitest": "^2.0.5"
+  }
+}

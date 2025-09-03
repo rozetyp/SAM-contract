@@ -1,0 +1,25 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Cron: SAM Opps",
+			"type": "shell",
+			"command": "pnpm -w run cron:opps",
+			"problemMatcher": []
+		}
+	]
+}
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Install deps (pnpm)",
+			"type": "shell",
+			"command": "pnpm install",
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			],
+			"group": "build"
+		}
+	]
+}

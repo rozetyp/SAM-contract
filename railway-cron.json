@@ -1,0 +1,7 @@
+{
+  "cron": {
+    "schedule": "0 13 * * *",
+    "command": "pnpm -w run cron:opps",
+    "description": "Daily SAM.gov opportunities digest at 1 PM UTC"
+  }
+}
