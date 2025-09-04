@@ -362,7 +362,7 @@ export default function LandingPage() {
                 onMouseOver={(e) => (e.target as HTMLElement).style.transform = 'translateY(-2px)'}
                 onMouseOut={(e) => (e.target as HTMLElement).style.transform = 'translateY(0)'}
               >
-                Start for $19/mo
+                Set Up Your Alerts
               </button>
               <button
                 onClick={() => setShowSampleEmail(true)}

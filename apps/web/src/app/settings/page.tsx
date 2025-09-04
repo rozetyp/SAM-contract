@@ -174,7 +174,40 @@ export default function SettingsPage() {
 
   return (
     <div style={pageStyle}>
-      <h1 style={{ textAlign: 'center', marginBottom: '40px', fontSize: '36px' }}>BidBeacon Settings</h1>
+      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+        <h1 style={{ fontSize: '36px', marginBottom: '12px' }}>Set Up Your SAM.gov Alerts</h1>
+        <p style={{ fontSize: '18px', color: '#666', margin: '0 0 24px' }}>
+          Configure your search criteria and start receiving daily contract opportunities
+        </p>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          gap: '16px',
+          fontSize: '14px',
+          color: '#999'
+        }}>
+          <span style={{ 
+            backgroundColor: paid ? '#28a745' : '#667eea', 
+            color: '#fff', 
+            padding: '4px 12px', 
+            borderRadius: '16px',
+            fontWeight: '600'
+          }}>
+            {paid ? '✓ Step 1: Configure Filters' : 'Step 1: Configure Filters'}
+          </span>
+          <span>→</span>
+          <span style={{ 
+            backgroundColor: paid ? '#28a745' : '#e9ecef', 
+            color: paid ? '#fff' : '#666',
+            padding: '4px 12px', 
+            borderRadius: '16px',
+            fontWeight: '600'
+          }}>
+            {paid ? '✓ Step 2: Subscribe ($19/mo)' : 'Step 2: Subscribe ($19/mo)'}
+          </span>
+        </div>
+      </div>
       
       {cronFailed && <div style={{ margin: '16px 0', padding: 16, background: '#f8d7da', borderRadius: '8px' }}>Last cron run failed. Please check logs.</div>}
       
@@ -186,7 +219,14 @@ export default function SettingsPage() {
         </div>
         
         {loading && email.trim() && <div style={{ margin: '16px 0', padding: 16, background: '#e3f2fd', borderRadius: '8px' }}>Checking subscription status...</div>}
-        {!loading && !paid && email.trim() && <div style={{ margin: '16px 0', padding: 16, background: '#fff3cd', borderRadius: '8px' }}><strong>Trial Mode:</strong> Configure your search below, but you'll need a paid subscription to save and receive digests.</div>}
+        {!loading && !paid && email.trim() && (
+          <div style={{ margin: '16px 0', padding: '20px', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', borderRadius: '8px', color: '#fff' }}>
+            <h3 style={{ margin: '0 0 8px', fontSize: '18px' }}>👆 Configure Your Filters Above</h3>
+            <p style={{ margin: '0', fontSize: '14px', opacity: '0.9' }}>
+              Test your search criteria with live preview, then subscribe to start receiving daily email alerts.
+            </p>
+          </div>
+        )}
         {!loading && paid && <div style={{ margin: '16px 0', padding: 16, background: '#d4edda', borderRadius: '8px' }}>✅ Subscription active! Configure your search filters below.</div>}
 
         <div style={{ ...formGroupStyle, opacity: paid ? 1 : 0.7 }}>
@@ -253,10 +293,10 @@ export default function SettingsPage() {
 
         <div style={{ display: 'flex', gap: '16px', marginTop: '32px', borderTop: '1px solid #e9ecef', paddingTop: '32px' }}>
           <button type="submit" disabled={!paid} style={paid ? primaryButtonStyle : disabledButtonStyle}>
-            Save Search Criteria
+            {paid ? 'Save Search Criteria' : 'Save Search (Requires Subscription)'}
           </button>
-          <button type="button" onClick={handleStripeCheckout} style={secondaryButtonStyle}>
-            {paid ? 'Manage Subscription' : 'Subscribe ($19/month)'}
+          <button type="button" onClick={handleStripeCheckout} style={paid ? secondaryButtonStyle : primaryButtonStyle}>
+            {paid ? 'Manage Subscription' : 'Complete Setup & Subscribe ($19/mo)'}
           </button>
         </div>
 
