@@ -45,6 +45,8 @@ railway up
 - **🔄 Deduplication**: Never receive the same opportunity twice
 - **📊 Real-time Dashboard**: Manage search criteria and subscription
 - **🏥 Health Monitoring**: Built-in health checks and logging
+- **🛡️ Advanced Rate Limiting**: Intelligent API throttling with exponential backoff
+- **⚡ Production-Ready**: Comprehensive error handling and retry logic
 
 ## 🏗️ Architecture
 
@@ -325,7 +327,7 @@ POST /api/dev/run-cron
 ### API Configuration
 - **Base URL**: `https://api.sam.gov/opportunities/v2/search`
 - **Authentication**: API key in query parameter
-- **Rate Limits**: Respect SAM.gov rate limiting
+- **Rate Limits**: Respects official Data.gov limits (1,000 requests/hour) with conservative throttling
 - **Date Format**: MM/dd/yyyy (required by SAM.gov)
 
 ### Search Parameters
@@ -638,14 +640,19 @@ railway run psql $DATABASE_URL -c "SELECT * FROM users LIMIT 5;"
 - **CORS configuration** for browser requests
 - **HTTPS only** in production
 
-## 🚀 Future Enhancements
+## � Changelog & Lessons Learned
 
-### Planned Features
-- [ ] **Advanced Filters**: Award amount ranges, location-based
-- [ ] **Multiple Alerts**: Different schedules per search
-- [ ] **Agency Tracking**: Follow specific government agencies  
-- [ ] **Contract History**: Track opportunity lifecycle
-- [ ] **Mobile App**: React Native or PWA
+### Key Technical Lessons
+- **Railway Nixpacks**: Never set `NIXPACKS_BUILD_CMD` or `NIXPACKS_START_CMD` to `"none"` - use `"true"` instead
+- **Cron Management**: Set `RAILWAY_RESTART_POLICY=never` to prevent runaway retry loops
+- **Rate Limiting**: Always implement conservative delays (3s between users) to respect external API limits
+- **Error Handling**: Categorize errors properly (rate_limited vs failed) for better monitoring
+- **Documentation**: Maintain clear setup guides and verification scripts for future recreation
+
+### Historical Fixes
+- **September 2025**: Resolved Railway cron service deployment issues with proper Nixpacks configuration
+- **September 2025**: Fixed runaway cron executions by changing restart policy from `on-failure` to `never`
+- **September 2025**: Implemented comprehensive rate limiting with per-user limits and exponential backoff
 - [ ] **API Access**: Public API for developers
 - [ ] **Team Accounts**: Multiple users per subscription
 

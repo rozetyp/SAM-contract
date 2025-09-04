@@ -41,6 +41,8 @@ DATABASE_URL="postgresql://..."
 
 # SAM.gov API
 SAM_OPPS_API_KEY="your-sam-api-key"
+# Note: SAM.gov is part of Data.gov with official rate limits of 1,000 requests/hour
+# Our rate limiting configuration stays well within these limits for safety
 
 # Stripe
 STRIPE_SECRET_KEY="sk_test_..."
@@ -119,6 +121,16 @@ SAM_OPPS_API_KEY=your-sam-api-key
 STRIPE_PRICE_ID=your-stripe-price-id
 STRIPE_SECRET_KEY=your-stripe-secret-key
 STRIPE_WEBHOOK_SECRET=your-stripe-webhook-secret
+
+# Rate Limiting Configuration (Optional - defaults provided)
+# Official Data.gov limits: 1,000 requests per hour across all services
+# Our conservative defaults ensure we stay well within these limits
+SAM_MAX_API_CALLS_PER_USER=10          # Maximum API calls per user to prevent excessive usage
+SAM_DELAY_BETWEEN_API_CALLS=2000       # Delay between API calls in milliseconds (2 seconds)
+SAM_DELAY_BETWEEN_USERS=5000           # Delay between users in milliseconds (5 seconds)
+SAM_MAX_RETRIES=3                      # Maximum retry attempts for failed API calls
+SAM_SAFETY_OFFSET_THRESHOLD=1000       # Safety threshold for pagination (stop if offset exceeds this)
+SAM_SAFETY_MIN_ITEMS_PER_PAGE=10       # Safety minimum items per page (stop if getting fewer than this)
 ```
 
 ### 5. Deploy
@@ -169,8 +181,9 @@ sam-contract/
 ### SAM.gov Integration
 - Daily opportunity fetching (last 2 days)
 - Filtering by user criteria
-- Rate limiting protection (3s between users)
+- **Advanced Rate Limiting**: Configurable delays, per-user limits, exponential backoff
 - Deduplication against sent notices
+- Comprehensive error handling and retry logic
 
 ### Email System
 - HTML digest emails via Resend
@@ -233,9 +246,16 @@ pnpm --filter=@sam/worker run build
 ### Common Issues
 
 #### Rate Limiting
-- SAM.gov API has strict rate limits
-- System includes 3s delays between users
-- Monitor `cron_runs` table for `rate_limited` status
+- **SAM.gov API has strict rate limits** - may return 429 errors
+- **System includes comprehensive protection:**
+  - 2-second delays between API calls
+  - 5-second delays between users
+  - Per-user API call limits (default: 10)
+  - Exponential backoff retry logic
+  - Graceful failure handling
+- **Monitor `cron_runs` table** for `rate_limited` or `failed` status
+- **Configure via environment variables** for different scenarios
+- **Automatic retry** on next scheduled run
 
 #### Database Issues
 - Check Railway PostgreSQL service

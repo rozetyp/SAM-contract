@@ -29,6 +29,13 @@ type SamRecord = {
 const SAM_BASE = process.env.SAM_API_BASE || 'https://api.sam.gov/opportunities/v2/search';
 
 // Rate limiting configuration
+// Official Data.gov limits: 1,000 requests per hour across all services
+// Our conservative defaults ensure we stay well within these limits:
+// - 10 calls per user max
+// - 2s between API calls
+// - 5s between users
+// - With 10 users: ~100 total calls over ~4 minutes (well under 1,000/hour)
+// - With 100 users: ~1,000 total calls over ~38 minutes (at official limit)
 const RATE_LIMIT_CONFIG = {
   maxApiCallsPerUser: parseInt(process.env.SAM_MAX_API_CALLS_PER_USER || '10'),
   delayBetweenApiCalls: parseInt(process.env.SAM_DELAY_BETWEEN_API_CALLS || '2000'), // 2 seconds
