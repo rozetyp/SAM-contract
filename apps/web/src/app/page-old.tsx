@@ -46,7 +46,7 @@ const ComparisonTable = () => (
         </tr>
         <tr>
           <td style={{ padding: '12px', fontWeight: '500' }}>Delivery</td>
-          <td style={{ padding: '12px', textAlign: 'center', backgroundColor: '#e3f2fd', fontWeight: '600' }}>Daily 13:00 UTC (25h window)</td>
+          <td style={{ padding: '12px', textAlign: 'center', backgroundColor: '#e3f2fd', fontWeight: '600' }}>Daily 13:00 UTC (48h window)</td>
           <td style={{ padding: '12px', textAlign: 'center' }}>Daily/weekly</td>
           <td style={{ padding: '12px', textAlign: 'center' }}>Suite alerts</td>
           <td style={{ padding: '12px', textAlign: 'center' }}>Suite alerts</td>
@@ -61,24 +61,24 @@ const FAQSection = () => {
   
   const faqs = [
     {
-      question: "What defines a high-signal opportunity?",
-      answer: "We deliver base contract notices and automatically filter out amendments, modifications, and other low-signal updates. Our system also deduplicates notices to ensure you never see the same opportunity twice, saving you valuable time."
+      question: "What does 'no noise' mean?",
+      answer: "We send base notices only and skip amendments/modifications. Duplicates are automatically deduped so you never see the same opportunity twice."
     },
     {
-      question: "Can I use keywords for fine-tuning?",
-      answer: "Yes. While our primary taxonomy filters (NAICS, PSC, Set-Aside) provide precise targeting, you can use include/exclude keywords for an additional layer of refinement."
+      question: "Can I use keywords?",
+      answer: "Yes, keywords are optional. Our taxonomy filters (NAICS/PSC/set-aside/agency) come first for precise targeting, but you can add include/exclude keywords for extra refinement."
     },
     {
-      question: "What is the delivery schedule?",
-      answer: "Digests are delivered daily at 1:00 PM UTC with a 25-hour window of new opportunities. This optimized timing ensures you receive fresh opportunities without overwhelming your inbox or missing critical deadlines."
+      question: "When do emails arrive?",
+      answer: "Daily at 13:00 UTC (8 AM EST, 5 AM PST) with a 48-hour opportunity window. This ensures you get fresh opportunities without overwhelming frequency."
     },
     {
-      question: "Is this an official government service?",
-      answer: "No. BidBeacon is an independent service. We are not affiliated with the GSA or SAM.gov. Our platform is designed to help you monitor federal opportunities more efficiently."
+      question: "Is this official?",
+      answer: "No. BidBeacon is not affiliated with GSA or SAM.gov. We're an independent service that helps you monitor SAM.gov opportunities more efficiently."
     },
     {
-      question: "Can I cancel my subscription at any time?",
-      answer: "Yes, you have full control over your subscription and can cancel at any time without long-term contracts or cancellation fees."
+      question: "Can I cancel anytime?",
+      answer: "Yes, you can cancel your subscription at any time. No long-term contracts or cancellation fees."
     }
   ];
 
@@ -191,17 +191,17 @@ const SampleEmailModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
         <div style={{ padding: '24px', fontFamily: 'Arial, sans-serif' }}>
           <div style={{ borderBottom: '2px solid #0066cc', paddingBottom: '16px', marginBottom: '20px' }}>
             <h1 style={{ margin: 0, fontSize: '18px', color: '#0066cc' }}>
-              Your SAM.gov Daily Digest
+              📧 Your SAM.gov daily digest
             </h1>
             <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#666' }}>
               <strong>From:</strong> alerts@bidbeacon.com<br />
-              <strong>Subject:</strong> Your SAM.gov Daily Digest - 5 New Opportunities
+              <strong>Subject:</strong> Your SAM.gov daily digest - 5 new opportunities
             </p>
           </div>
           
           <div style={{ marginBottom: '20px', padding: '12px', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
             <p style={{ margin: 0, fontSize: '14px' }}>
-              <strong>Found 5 new opportunities</strong> matching your criteria in the last 25 hours.
+              <strong>Found 5 new opportunities</strong> matching your criteria in the last 48 hours.
             </p>
           </div>
           
@@ -265,7 +265,7 @@ const SampleEmailModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
           
           <div style={{ marginTop: '24px', padding: '16px', backgroundColor: '#f8f9fa', borderRadius: '4px', fontSize: '12px', color: '#666' }}>
             <p style={{ margin: 0 }}>
-              This digest covers opportunities posted in the last 25 hours. 
+              This digest covers opportunities posted in the last 48 hours. 
               All amendments and duplicates have been filtered out.
             </p>
           </div>
@@ -322,7 +322,7 @@ export default function LandingPage() {
       }}>
         {/* Hero Section */}
         <section style={{
-          background: 'linear-gradient(135deg, #3c40c6 0%, #575fcf 100%)', // More professional blue/purple
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           color: '#fff',
           padding: '80px 20px',
           textAlign: 'center'
@@ -334,7 +334,7 @@ export default function LandingPage() {
               margin: '0 0 24px',
               lineHeight: '1.2'
             }}>
-              SAM.gov Contract Alerts — Daily Intelligence, Zero Noise
+              SAM.gov Contract Alerts — Daily Email, Zero Noise
             </h1>
             <p style={{ 
               fontSize: 'clamp(16px, 3vw, 20px)', 
@@ -342,14 +342,14 @@ export default function LandingPage() {
               opacity: '0.9',
               fontWeight: '400'
             }}>
-              Receive a daily, curated digest of federal contract opportunities, filtered for relevance and delivered directly to your inbox.
+              One saved search. Clean daily digest at 13:00 UTC. Amendments auto-filtered. $19/mo.
             </p>
             <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
               <button
                 onClick={handleStartSubscription}
                 style={{
                   backgroundColor: '#fff',
-                  color: '#3c40c6',
+                  color: '#667eea',
                   border: 'none',
                   padding: '16px 32px',
                   borderRadius: '8px',
@@ -379,14 +379,14 @@ export default function LandingPage() {
                 }}
                 onMouseOver={(e) => {
                   (e.target as HTMLElement).style.backgroundColor = '#fff';
-                  (e.target as HTMLElement).style.color = '#3c40c6';
+                  (e.target as HTMLElement).style.color = '#667eea';
                 }}
                 onMouseOut={(e) => {
                   (e.target as HTMLElement).style.backgroundColor = 'transparent';
                   (e.target as HTMLElement).style.color = '#fff';
                 }}
               >
-                View Sample Digest
+                See a sample email
               </button>
             </div>
           </div>
@@ -396,7 +396,7 @@ export default function LandingPage() {
         <section style={{ padding: '80px 20px', backgroundColor: '#f8f9fa' }}>
           <div style={{ maxWidth: '1000px', margin: '0 auto', textAlign: 'center' }}>
             <h2 style={{ fontSize: '36px', fontWeight: '700', marginBottom: '48px' }}>
-              A More Efficient Way to Monitor Federal Contracting
+              How It Works
             </h2>
             <div style={{ 
               display: 'grid', 
@@ -405,29 +405,74 @@ export default function LandingPage() {
               marginTop: '40px'
             }}>
               <div>
+                <div style={{ 
+                  backgroundColor: '#667eea', 
+                  color: '#fff', 
+                  width: '60px', 
+                  height: '60px', 
+                  borderRadius: '50%', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  margin: '0 auto 20px',
+                  fontSize: '24px'
+                }}>
+                  🔍
+                </div>
                 <h3 style={{ fontSize: '22px', fontWeight: '600', marginBottom: '16px' }}>
-                  1. Define Your Targets
+                  1. Pick your scope
                 </h3>
                 <p style={{ fontSize: '16px', color: '#666' }}>
-                  Effortlessly define your target market using our guided interface with NAICS/PSC codes, set-aside programs, and agency filters.
+                  NAICS/PSC codes, set-aside programs, agency filters. Keywords optional.
+                  Our guided interface makes setup effortless.
                 </p>
               </div>
               
               <div>
+                <div style={{ 
+                  backgroundColor: '#667eea', 
+                  color: '#fff', 
+                  width: '60px', 
+                  height: '60px', 
+                  borderRadius: '50%', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  margin: '0 auto 20px',
+                  fontSize: '24px'
+                }}>
+                  ✅
+                </div>
                 <h3 style={{ fontSize: '22px', fontWeight: '600', marginBottom: '16px' }}>
-                  2. Receive Curated Opportunities
+                  2. We fetch & filter
                 </h3>
                 <p style={{ fontSize: '16px', color: '#666' }}>
-                  Our system filters irrelevant amendments and deduplicates notices, ensuring you receive only high-signal opportunities.
+                  Base notices only (no amendments), automatically deduped.
+                  Smart filtering eliminates noise.
                 </p>
               </div>
               
               <div>
+                <div style={{ 
+                  backgroundColor: '#667eea', 
+                  color: '#fff', 
+                  width: '60px', 
+                  height: '60px', 
+                  borderRadius: '50%', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  margin: '0 auto 20px',
+                  fontSize: '24px'
+                }}>
+                  📧
+                </div>
                 <h3 style={{ fontSize: '22px', fontWeight: '600', marginBottom: '16px' }}>
-                  3. Act on Intelligence
+                  3. You get signal
                 </h3>
                 <p style={{ fontSize: '16px', color: '#666' }}>
-                  Receive a single, actionable digest each day with properly formatted opportunities and direct links for immediate review on SAM.gov.
+                  One clean digest at 13:00 UTC. Only relevant opportunities,
+                  properly formatted with direct SAM.gov links.
                 </p>
               </div>
             </div>
@@ -438,10 +483,10 @@ export default function LandingPage() {
         <section style={{ padding: '80px 20px', backgroundColor: '#fff' }}>
           <div style={{ maxWidth: '1000px', margin: '0 auto', textAlign: 'center' }}>
             <h2 style={{ fontSize: '36px', fontWeight: '700', marginBottom: '24px' }}>
-              A Focused and Actionable Email Digest
+              Clean, Professional Email Digest
             </h2>
             <p style={{ fontSize: '18px', color: '#666', marginBottom: '40px' }}>
-              No clutter, no noise. Just the opportunities that match your precise criteria.
+              No clutter, no noise. Just the opportunities that match your criteria.
             </p>
             
             <div style={{
@@ -465,7 +510,7 @@ export default function LandingPage() {
                   <strong>From:</strong> alerts@bidbeacon.com
                 </div>
                 <div style={{ fontSize: '16px', fontWeight: '600', color: '#333' }}>
-                  Your SAM.gov Daily Digest - 5 New Opportunities
+                  Your SAM.gov daily digest - 5 new opportunities
                 </div>
               </div>
               
@@ -480,7 +525,7 @@ export default function LandingPage() {
                   <strong>Found 5 new opportunities</strong> matching your criteria.
                 </div>
                 
-                <div style={{ borderLeft: '3px solid #3c40c6', paddingLeft: '12px', marginBottom: '12px' }}>
+                <div style={{ borderLeft: '3px solid #667eea', paddingLeft: '12px', marginBottom: '12px' }}>
                   <div style={{ fontWeight: '600', fontSize: '14px', marginBottom: '4px' }}>
                     Cloud Infrastructure Services
                   </div>
@@ -489,7 +534,7 @@ export default function LandingPage() {
                   </div>
                 </div>
                 
-                <div style={{ borderLeft: '3px solid #3c40c6', paddingLeft: '12px', marginBottom: '12px' }}>
+                <div style={{ borderLeft: '3px solid #667eea', paddingLeft: '12px', marginBottom: '12px' }}>
                   <div style={{ fontWeight: '600', fontSize: '14px', marginBottom: '4px' }}>
                     Cybersecurity Assessment
                   </div>
@@ -498,7 +543,7 @@ export default function LandingPage() {
                   </div>
                 </div>
                 
-                <div style={{ borderLeft: '3px solid #3c40c6', paddingLeft: '12px' }}>
+                <div style={{ borderLeft: '3px solid #667eea', paddingLeft: '12px' }}>
                   <div style={{ fontWeight: '600', fontSize: '14px', marginBottom: '4px' }}>
                     Software Development
                   </div>
@@ -513,11 +558,11 @@ export default function LandingPage() {
                 backgroundColor: '#f8f9fa', 
                 borderTop: '1px solid #e9ecef',
                 fontSize: '12px',
-                color: '#3c40c6',
+                color: '#667eea',
                 textAlign: 'center',
                 fontWeight: '500'
               }}>
-                Click to View Full Sample Digest →
+                Click to view full sample email →
               </div>
             </div>
           </div>
@@ -531,9 +576,9 @@ export default function LandingPage() {
             </h2>
             <ComparisonTable />
             <div style={{ textAlign: 'center', marginTop: '32px', fontSize: '14px', color: '#666' }}>
-              Sources: <a href="https://www.highergov.com/pricing" target="_blank" rel="noopener noreferrer" style={{ color: '#3c40c6' }}>HigherGov pricing</a>, 
-              {' '}<a href="https://www.govtribe.com" target="_blank" rel="noopener noreferrer" style={{ color: '#3c40c6' }}>GovTribe plans</a>, 
-              {' '}<a href="https://sam.gov" target="_blank" rel="noopener noreferrer" style={{ color: '#3c40c6' }}>SAM.gov help docs</a>
+              Sources: <a href="https://www.highergov.com/pricing" target="_blank" rel="noopener noreferrer" style={{ color: '#667eea' }}>HigherGov pricing</a>, 
+              {' '}<a href="https://www.govtribe.com" target="_blank" rel="noopener noreferrer" style={{ color: '#667eea' }}>GovTribe plans</a>, 
+              {' '}<a href="https://sam.gov" target="_blank" rel="noopener noreferrer" style={{ color: '#667eea' }}>SAM.gov help docs</a>
             </div>
           </div>
         </section>
@@ -546,12 +591,12 @@ export default function LandingPage() {
             </h2>
             
             <div style={{
-              border: '2px solid #3c40c6',
+              border: '2px solid #667eea',
               borderRadius: '12px',
               padding: '40px',
               backgroundColor: '#f8f9fa'
             }}>
-              <div style={{ fontSize: '48px', fontWeight: '700', color: '#3c40c6', marginBottom: '8px' }}>
+              <div style={{ fontSize: '48px', fontWeight: '700', color: '#667eea', marginBottom: '8px' }}>
                 $19
               </div>
               <div style={{ fontSize: '18px', color: '#666', marginBottom: '24px' }}>
@@ -568,27 +613,27 @@ export default function LandingPage() {
                 marginRight: 'auto'
               }}>
                 <li style={{ padding: '8px 0', display: 'flex', alignItems: 'center' }}>
-                  <span style={{ color: '#22c55e', marginRight: '12px' }}>✓</span>
-                  A single, powerful search configuration
+                  <span style={{ color: '#22c55e', marginRight: '12px' }}>✅</span>
+                  One saved search configuration
                 </li>
                 <li style={{ padding: '8px 0', display: 'flex', alignItems: 'center' }}>
-                  <span style={{ color: '#22c55e', marginRight: '12px' }}>✓</span>
-                  Reliable daily email digests
+                  <span style={{ color: '#22c55e', marginRight: '12px' }}>✅</span>
+                  Daily email digest at 13:00 UTC
                 </li>
                 <li style={{ padding: '8px 0', display: 'flex', alignItems: 'center' }}>
-                  <span style={{ color: '#22c55e', marginRight: '12px' }}>✓</span>
-                  Automatic filtering of amendments
+                  <span style={{ color: '#22c55e', marginRight: '12px' }}>✅</span>
+                  Amendments auto-filtered
                 </li>
                 <li style={{ padding: '8px 0', display: 'flex', alignItems: 'center' }}>
-                  <span style={{ color: '#22c55e', marginRight: '12px' }}>✓</span>
-                  Cancel your subscription at any time
+                  <span style={{ color: '#22c55e', marginRight: '12px' }}>✅</span>
+                  Cancel anytime
                 </li>
               </ul>
               
               <button
                 onClick={handleStartSubscription}
                 style={{
-                  backgroundColor: '#3c40c6',
+                  backgroundColor: '#667eea',
                   color: '#fff',
                   border: 'none',
                   padding: '16px 32px',
@@ -600,7 +645,7 @@ export default function LandingPage() {
                   maxWidth: '300px'
                 }}
               >
-                Set Up Your Alerts
+                Start for $19/mo
               </button>
             </div>
             
