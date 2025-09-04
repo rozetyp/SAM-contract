@@ -8,45 +8,45 @@ const ComparisonTable = () => (
       width: '100%', 
       borderCollapse: 'collapse', 
       fontSize: '14px',
-      backgroundColor: '#fff',
-      border: '1px solid #e9ecef'
+      backgroundColor: '#FFFFFF',
+      border: '1px solid #CED4DA'
     }}>
       <thead>
-        <tr style={{ backgroundColor: '#f8f9fa' }}>
-          <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600', borderBottom: '2px solid #dee2e6' }}>Feature</th>
-          <th style={{ padding: '12px', textAlign: 'center', fontWeight: '600', borderBottom: '2px solid #dee2e6', backgroundColor: '#e3f2fd' }}>
+        <tr style={{ backgroundColor: '#F8F9FA' }}>
+          <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600, borderBottom: '2px solid #CED4DA' }}>Feature</th>
+          <th style={{ padding: '12px', textAlign: 'center', fontWeight: 600, borderBottom: '2px solid #CED4DA', backgroundColor: '#eaf3fb' }}>
             <strong>BidBeacon</strong>
           </th>
-          <th style={{ padding: '12px', textAlign: 'center', fontWeight: '600', borderBottom: '2px solid #dee2e6' }}>SAM Saved Search (free)</th>
-          <th style={{ padding: '12px', textAlign: 'center', fontWeight: '600', borderBottom: '2px solid #dee2e6' }}>HigherGov</th>
-          <th style={{ padding: '12px', textAlign: 'center', fontWeight: '600', borderBottom: '2px solid #dee2e6' }}>GovTribe</th>
+          <th style={{ padding: '12px', textAlign: 'center', fontWeight: 600, borderBottom: '2px solid #CED4DA' }}>SAM Saved Search (free)</th>
+          <th style={{ padding: '12px', textAlign: 'center', fontWeight: 600, borderBottom: '2px solid #CED4DA' }}>HigherGov</th>
+          <th style={{ padding: '12px', textAlign: 'center', fontWeight: 600, borderBottom: '2px solid #CED4DA' }}>GovTribe</th>
         </tr>
       </thead>
       <tbody>
-        <tr style={{ borderBottom: '1px solid #dee2e6' }}>
-          <td style={{ padding: '12px', fontWeight: '500' }}>Price</td>
-          <td style={{ padding: '12px', textAlign: 'center', backgroundColor: '#e3f2fd', fontWeight: '600' }}>$19/mo</td>
+        <tr style={{ borderBottom: '1px solid #CED4DA' }}>
+          <td style={{ padding: '12px', fontWeight: 500 }}>Price</td>
+          <td style={{ padding: '12px', textAlign: 'center', backgroundColor: '#eaf3fb', fontWeight: 600 }}>$19/mo</td>
           <td style={{ padding: '12px', textAlign: 'center' }}>Free</td>
           <td style={{ padding: '12px', textAlign: 'center' }}>$500/yr Starter</td>
           <td style={{ padding: '12px', textAlign: 'center' }}>14-day trial, plans from $595/yr</td>
         </tr>
-        <tr style={{ borderBottom: '1px solid #dee2e6' }}>
-          <td style={{ padding: '12px', fontWeight: '500' }}>Setup</td>
-          <td style={{ padding: '12px', textAlign: 'center', backgroundColor: '#e3f2fd', fontWeight: '600' }}>2-min guided filters</td>
+        <tr style={{ borderBottom: '1px solid #CED4DA' }}>
+          <td style={{ padding: '12px', fontWeight: 500 }}>Setup</td>
+          <td style={{ padding: '12px', textAlign: 'center', backgroundColor: '#eaf3fb', fontWeight: 600 }}>2-min guided filters</td>
           <td style={{ padding: '12px', textAlign: 'center' }}>Manual</td>
           <td style={{ padding: '12px', textAlign: 'center' }}>Broad suite</td>
           <td style={{ padding: '12px', textAlign: 'center' }}>Broad suite</td>
         </tr>
-        <tr style={{ borderBottom: '1px solid #dee2e6' }}>
-          <td style={{ padding: '12px', fontWeight: '500' }}>Noise control</td>
-          <td style={{ padding: '12px', textAlign: 'center', backgroundColor: '#e3f2fd', fontWeight: '600' }}>Amendments auto-filtered + dedupe</td>
+        <tr style={{ borderBottom: '1px solid #CED4DA' }}>
+          <td style={{ padding: '12px', fontWeight: 500 }}>Noise control</td>
+          <td style={{ padding: '12px', textAlign: 'center', backgroundColor: '#eaf3fb', fontWeight: 600 }}>Amendments auto-filtered + dedupe</td>
           <td style={{ padding: '12px', textAlign: 'center' }}>Alerts can be noisy</td>
           <td style={{ padding: '12px', textAlign: 'center' }}>Suite tools</td>
           <td style={{ padding: '12px', textAlign: 'center' }}>Suite tools</td>
         </tr>
         <tr>
-          <td style={{ padding: '12px', fontWeight: '500' }}>Delivery</td>
-          <td style={{ padding: '12px', textAlign: 'center', backgroundColor: '#e3f2fd', fontWeight: '600' }}>Daily 13:00 UTC (2-day window)</td>
+          <td style={{ padding: '12px', fontWeight: 500 }}>Delivery</td>
+          <td style={{ padding: '12px', textAlign: 'center', backgroundColor: '#eaf3fb', fontWeight: 600 }}>Daily 13:00 UTC (2-day window)</td>
           <td style={{ padding: '12px', textAlign: 'center' }}>Daily/weekly</td>
           <td style={{ padding: '12px', textAlign: 'center' }}>Suite alerts</td>
           <td style={{ padding: '12px', textAlign: 'center' }}>Suite alerts</td>
@@ -84,7 +84,7 @@ const FAQSection = () => {
 
   return (
     <div style={{ margin: '48px 0' }}>
-      <h2 style={{ textAlign: 'center', marginBottom: '32px', fontSize: '28px', fontWeight: '700' }}>
+      <h2 style={{ textAlign: 'center', marginBottom: '32px', fontSize: '28px', fontWeight: 700, color: '#333333' }}>
         Frequently Asked Questions
       </h2>
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
@@ -92,7 +92,7 @@ const FAQSection = () => {
           <div 
             key={index}
             style={{ 
-              border: '1px solid #e9ecef', 
+              border: '1px solid #CED4DA', 
               borderRadius: '8px', 
               marginBottom: '16px',
               overflow: 'hidden'
@@ -103,15 +103,16 @@ const FAQSection = () => {
               style={{
                 width: '100%',
                 padding: '16px 20px',
-                backgroundColor: '#f8f9fa',
+                backgroundColor: '#F8F9FA',
                 border: 'none',
                 textAlign: 'left',
                 fontSize: '16px',
-                fontWeight: '600',
+                fontWeight: 600,
                 cursor: 'pointer',
                 display: 'flex',
                 justifyContent: 'space-between',
-                alignItems: 'center'
+                alignItems: 'center',
+                color: '#333333'
               }}
             >
               {faq.question}
@@ -122,8 +123,8 @@ const FAQSection = () => {
             {openFAQ === index && (
               <div style={{ 
                 padding: '16px 20px', 
-                backgroundColor: '#fff',
-                borderTop: '1px solid #e9ecef',
+                backgroundColor: '#FFFFFF',
+                borderTop: '1px solid #CED4DA',
                 fontSize: '14px',
                 lineHeight: '1.6',
                 color: '#555'
@@ -156,7 +157,7 @@ const SampleEmailModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
       padding: '20px'
     }}>
       <div style={{
-        backgroundColor: '#fff',
+        backgroundColor: '#FFFFFF',
         borderRadius: '8px',
         maxWidth: '900px',
         width: '100%',
@@ -175,7 +176,7 @@ const SampleEmailModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
             fontSize: '24px',
             cursor: 'pointer',
             zIndex: 1001,
-            backgroundColor: '#fff',
+            backgroundColor: '#FFFFFF',
             borderRadius: '50%',
             width: '32px',
             height: '32px',
@@ -189,8 +190,8 @@ const SampleEmailModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
         
         {/* Sample Email Content */}
         <div style={{ padding: '24px', fontFamily: 'Arial, sans-serif' }}>
-          <div style={{ borderBottom: '2px solid #0066cc', paddingBottom: '16px', marginBottom: '20px' }}>
-            <h1 style={{ margin: 0, fontSize: '18px', color: '#0066cc' }}>
+          <div style={{ borderBottom: '2px solid #005ea2', paddingBottom: '16px', marginBottom: '20px' }}>
+            <h1 style={{ margin: 0, fontSize: '18px', color: '#005ea2' }}>
               Your SAM.gov Daily Digest
             </h1>
             <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#666' }}>
@@ -199,7 +200,7 @@ const SampleEmailModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
             </p>
           </div>
           
-          <div style={{ marginBottom: '20px', padding: '12px', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
+          <div style={{ marginBottom: '20px', padding: '12px', backgroundColor: '#F8F9FA', borderRadius: '4px' }}>
             <p style={{ margin: 0, fontSize: '14px' }}>
               <strong>Found 5 new opportunities</strong> matching your criteria from the last 2 days.
             </p>
@@ -230,13 +231,13 @@ const SampleEmailModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
             }
           ].map((opp, index) => (
             <div key={index} style={{
-              border: '1px solid #e9ecef',
+              border: '1px solid #CED4DA',
               borderRadius: '6px',
               padding: '16px',
               marginBottom: '16px',
-              backgroundColor: '#fff'
+              backgroundColor: '#FFFFFF'
             }}>
-              <h3 style={{ margin: '0 0 8px', fontSize: '16px', color: '#0066cc' }}>
+              <h3 style={{ margin: '0 0 8px', fontSize: '16px', color: '#005ea2' }}>
                 {opp.title}
               </h3>
               <div style={{ fontSize: '14px', color: '#666', marginBottom: '12px' }}>
@@ -249,13 +250,13 @@ const SampleEmailModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                 href="#"
                 style={{
                   display: 'inline-block',
-                  backgroundColor: '#0066cc',
-                  color: '#fff',
+                  backgroundColor: '#005ea2',
+                  color: '#FFFFFF',
                   padding: '8px 16px',
                   borderRadius: '4px',
                   textDecoration: 'none',
                   fontSize: '14px',
-                  fontWeight: '600'
+                  fontWeight: 600
                 }}
               >
                 Open in SAM.gov →
@@ -263,7 +264,7 @@ const SampleEmailModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
             </div>
           ))}
           
-          <div style={{ marginTop: '24px', padding: '16px', backgroundColor: '#f8f9fa', borderRadius: '4px', fontSize: '12px', color: '#666' }}>
+          <div style={{ marginTop: '24px', padding: '16px', backgroundColor: '#F8F9FA', borderRadius: '4px', fontSize: '12px', color: '#666' }}>
             <p style={{ margin: 0 }}>
               This digest covers opportunities posted in the last 2 calendar days. 
               All amendments and duplicates have been filtered out.
@@ -318,19 +319,19 @@ export default function LandingPage() {
       <div style={{ 
         fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
         lineHeight: '1.6',
-        color: '#333'
+        color: '#333333'
       }}>
         {/* Hero Section */}
         <section style={{
-          background: 'linear-gradient(135deg, #3c40c6 0%, #575fcf 100%)', // More professional blue/purple
-          color: '#fff',
+          background: 'linear-gradient(135deg, #1A3A5A 0%, #005ea2 100%)',
+          color: '#FFFFFF',
           padding: '80px 20px',
           textAlign: 'center'
         }}>
           <div style={{ maxWidth: '800px', margin: '0 auto' }}>
             <h1 style={{ 
               fontSize: 'clamp(28px, 5vw, 48px)', 
-              fontWeight: '700', 
+              fontWeight: 700, 
               margin: '0 0 24px',
               lineHeight: '1.2'
             }}>
@@ -340,7 +341,7 @@ export default function LandingPage() {
               fontSize: 'clamp(16px, 3vw, 20px)', 
               margin: '0 0 40px',
               opacity: '0.9',
-              fontWeight: '400'
+              fontWeight: 400
             }}>
               Receive a daily, curated digest of federal contract opportunities, filtered for relevance and delivered directly to your inbox.
             </p>
@@ -348,13 +349,13 @@ export default function LandingPage() {
               <button
                 onClick={handleStartSubscription}
                 style={{
-                  backgroundColor: '#fff',
-                  color: '#3c40c6',
+                  backgroundColor: '#005ea2',
+                  color: '#FFFFFF',
                   border: 'none',
                   padding: '16px 32px',
                   borderRadius: '8px',
                   fontSize: '18px',
-                  fontWeight: '600',
+                  fontWeight: 600,
                   cursor: 'pointer',
                   transition: 'transform 0.2s',
                   boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
@@ -368,22 +369,22 @@ export default function LandingPage() {
                 onClick={() => setShowSampleEmail(true)}
                 style={{
                   backgroundColor: 'transparent',
-                  color: '#fff',
-                  border: '2px solid #fff',
+                  color: '#FFFFFF',
+                  border: '2px solid #FFFFFF',
                   padding: '14px 32px',
                   borderRadius: '8px',
                   fontSize: '18px',
-                  fontWeight: '600',
+                  fontWeight: 600,
                   cursor: 'pointer',
                   transition: 'all 0.2s'
                 }}
                 onMouseOver={(e) => {
-                  (e.target as HTMLElement).style.backgroundColor = '#fff';
-                  (e.target as HTMLElement).style.color = '#3c40c6';
+                  (e.target as HTMLElement).style.backgroundColor = '#FFFFFF';
+                  (e.target as HTMLElement).style.color = '#005ea2';
                 }}
                 onMouseOut={(e) => {
                   (e.target as HTMLElement).style.backgroundColor = 'transparent';
-                  (e.target as HTMLElement).style.color = '#fff';
+                  (e.target as HTMLElement).style.color = '#FFFFFF';
                 }}
               >
                 View Sample Digest
@@ -393,9 +394,9 @@ export default function LandingPage() {
         </section>
 
         {/* How It Works */}
-        <section style={{ padding: '80px 20px', backgroundColor: '#f8f9fa' }}>
+        <section style={{ padding: '80px 20px', backgroundColor: '#F8F9FA' }}>
           <div style={{ maxWidth: '1000px', margin: '0 auto', textAlign: 'center' }}>
-            <h2 style={{ fontSize: '36px', fontWeight: '700', marginBottom: '48px' }}>
+            <h2 style={{ fontSize: '36px', fontWeight: 700, marginBottom: '48px', color: '#333333' }}>
               A More Efficient Way to Monitor Federal Contracting
             </h2>
             <div style={{ 
@@ -405,7 +406,7 @@ export default function LandingPage() {
               marginTop: '40px'
             }}>
               <div>
-                <h3 style={{ fontSize: '22px', fontWeight: '600', marginBottom: '16px' }}>
+                <h3 style={{ fontSize: '22px', fontWeight: 600, marginBottom: '16px', color: '#333333' }}>
                   1. Define Your Targets
                 </h3>
                 <p style={{ fontSize: '16px', color: '#666' }}>
@@ -414,7 +415,7 @@ export default function LandingPage() {
               </div>
               
               <div>
-                <h3 style={{ fontSize: '22px', fontWeight: '600', marginBottom: '16px' }}>
+                <h3 style={{ fontSize: '22px', fontWeight: 600, marginBottom: '16px', color: '#333333' }}>
                   2. Receive Curated Opportunities
                 </h3>
                 <p style={{ fontSize: '16px', color: '#666' }}>
@@ -423,7 +424,7 @@ export default function LandingPage() {
               </div>
               
               <div>
-                <h3 style={{ fontSize: '22px', fontWeight: '600', marginBottom: '16px' }}>
+                <h3 style={{ fontSize: '22px', fontWeight: 600, marginBottom: '16px', color: '#333333' }}>
                   3. Act on Intelligence
                 </h3>
                 <p style={{ fontSize: '16px', color: '#666' }}>
@@ -435,9 +436,9 @@ export default function LandingPage() {
         </section>
 
         {/* Sample Email Screenshot Section */}
-        <section style={{ padding: '80px 20px', backgroundColor: '#fff' }}>
+        <section style={{ padding: '80px 20px', backgroundColor: '#FFFFFF' }}>
           <div style={{ maxWidth: '1000px', margin: '0 auto', textAlign: 'center' }}>
-            <h2 style={{ fontSize: '36px', fontWeight: '700', marginBottom: '24px' }}>
+            <h2 style={{ fontSize: '36px', fontWeight: 700, marginBottom: '24px', color: '#333333' }}>
               A Focused and Actionable Email Digest
             </h2>
             <p style={{ fontSize: '18px', color: '#666', marginBottom: '40px' }}>
@@ -445,7 +446,7 @@ export default function LandingPage() {
             </p>
             
             <div style={{
-              border: '1px solid #e9ecef',
+              border: '1px solid #CED4DA',
               borderRadius: '12px',
               overflow: 'hidden',
               boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
@@ -457,21 +458,21 @@ export default function LandingPage() {
             >
               <div style={{ 
                 padding: '20px', 
-                backgroundColor: '#f8f9fa', 
-                borderBottom: '1px solid #e9ecef',
+                backgroundColor: '#F8F9FA', 
+                borderBottom: '1px solid #CED4DA',
                 textAlign: 'left'
               }}>
                 <div style={{ fontSize: '14px', color: '#666', marginBottom: '8px' }}>
                   <strong>From:</strong> alerts@bidbeacon.com
                 </div>
-                <div style={{ fontSize: '16px', fontWeight: '600', color: '#333' }}>
+                <div style={{ fontSize: '16px', fontWeight: 600, color: '#333333' }}>
                   Your SAM.gov Daily Digest - 5 New Opportunities
                 </div>
               </div>
               
               <div style={{ padding: '20px', textAlign: 'left' }}>
                 <div style={{ 
-                  backgroundColor: '#e3f2fd', 
+                  backgroundColor: '#eaf3fb', 
                   padding: '12px', 
                   borderRadius: '6px', 
                   marginBottom: '16px',
@@ -480,8 +481,8 @@ export default function LandingPage() {
                   <strong>Found 5 new opportunities</strong> matching your criteria.
                 </div>
                 
-                <div style={{ borderLeft: '3px solid #3c40c6', paddingLeft: '12px', marginBottom: '12px' }}>
-                  <div style={{ fontWeight: '600', fontSize: '14px', marginBottom: '4px' }}>
+                <div style={{ borderLeft: '3px solid #005ea2', paddingLeft: '12px', marginBottom: '12px' }}>
+                  <div style={{ fontWeight: 600, fontSize: '14px', marginBottom: '4px' }}>
                     Cloud Infrastructure Services
                   </div>
                   <div style={{ fontSize: '12px', color: '#666' }}>
@@ -489,8 +490,8 @@ export default function LandingPage() {
                   </div>
                 </div>
                 
-                <div style={{ borderLeft: '3px solid #3c40c6', paddingLeft: '12px', marginBottom: '12px' }}>
-                  <div style={{ fontWeight: '600', fontSize: '14px', marginBottom: '4px' }}>
+                <div style={{ borderLeft: '3px solid #005ea2', paddingLeft: '12px', marginBottom: '12px' }}>
+                  <div style={{ fontWeight: 600, fontSize: '14px', marginBottom: '4px' }}>
                     Cybersecurity Assessment
                   </div>
                   <div style={{ fontSize: '12px', color: '#666' }}>
@@ -498,8 +499,8 @@ export default function LandingPage() {
                   </div>
                 </div>
                 
-                <div style={{ borderLeft: '3px solid #3c40c6', paddingLeft: '12px' }}>
-                  <div style={{ fontWeight: '600', fontSize: '14px', marginBottom: '4px' }}>
+                <div style={{ borderLeft: '3px solid #005ea2', paddingLeft: '12px' }}>
+                  <div style={{ fontWeight: 600, fontSize: '14px', marginBottom: '4px' }}>
                     Software Development
                   </div>
                   <div style={{ fontSize: '12px', color: '#666' }}>
@@ -510,12 +511,12 @@ export default function LandingPage() {
               
               <div style={{ 
                 padding: '16px 20px', 
-                backgroundColor: '#f8f9fa', 
-                borderTop: '1px solid #e9ecef',
+                backgroundColor: '#F8F9FA', 
+                borderTop: '1px solid #CED4DA',
                 fontSize: '12px',
-                color: '#3c40c6',
+                color: '#005ea2',
                 textAlign: 'center',
-                fontWeight: '500'
+                fontWeight: 500
               }}>
                 Click to View Full Sample Digest →
               </div>
@@ -524,34 +525,34 @@ export default function LandingPage() {
         </section>
 
         {/* Comparison Section */}
-        <section style={{ padding: '80px 20px', backgroundColor: '#f8f9fa' }}>
+        <section style={{ padding: '80px 20px', backgroundColor: '#F8F9FA' }}>
           <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-            <h2 style={{ fontSize: '36px', fontWeight: '700', textAlign: 'center', marginBottom: '48px' }}>
+            <h2 style={{ fontSize: '36px', fontWeight: 700, textAlign: 'center', marginBottom: '48px', color: '#333333' }}>
               Why Choose BidBeacon?
             </h2>
             <ComparisonTable />
             <div style={{ textAlign: 'center', marginTop: '32px', fontSize: '14px', color: '#666' }}>
-              Sources: <a href="https://www.highergov.com/pricing" target="_blank" rel="noopener noreferrer" style={{ color: '#3c40c6' }}>HigherGov pricing</a>, 
-              {' '}<a href="https://www.govtribe.com" target="_blank" rel="noopener noreferrer" style={{ color: '#3c40c6' }}>GovTribe plans</a>, 
-              {' '}<a href="https://sam.gov" target="_blank" rel="noopener noreferrer" style={{ color: '#3c40c6' }}>SAM.gov help docs</a>
+              Sources: <a href="https://www.highergov.com/pricing" target="_blank" rel="noopener noreferrer" style={{ color: '#005ea2' }}>HigherGov pricing</a>, 
+              {' '}<a href="https://www.govtribe.com" target="_blank" rel="noopener noreferrer" style={{ color: '#005ea2' }}>GovTribe plans</a>, 
+              {' '}<a href="https://sam.gov" target="_blank" rel="noopener noreferrer" style={{ color: '#005ea2' }}>SAM.gov help docs</a>
             </div>
           </div>
         </section>
 
         {/* Pricing Section */}
-        <section style={{ padding: '80px 20px', backgroundColor: '#fff' }}>
+        <section style={{ padding: '80px 20px', backgroundColor: '#FFFFFF' }}>
           <div style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
-            <h2 style={{ fontSize: '36px', fontWeight: '700', marginBottom: '24px' }}>
+            <h2 style={{ fontSize: '36px', fontWeight: 700, marginBottom: '24px', color: '#333333' }}>
               Simple, Transparent Pricing
             </h2>
             
             <div style={{
-              border: '2px solid #3c40c6',
+              border: '2px solid #005ea2',
               borderRadius: '12px',
               padding: '40px',
-              backgroundColor: '#f8f9fa'
+              backgroundColor: '#F8F9FA'
             }}>
-              <div style={{ fontSize: '48px', fontWeight: '700', color: '#3c40c6', marginBottom: '8px' }}>
+              <div style={{ fontSize: '48px', fontWeight: 700, color: '#005ea2', marginBottom: '8px' }}>
                 $19
               </div>
               <div style={{ fontSize: '18px', color: '#666', marginBottom: '24px' }}>
@@ -588,13 +589,13 @@ export default function LandingPage() {
               <button
                 onClick={handleStartSubscription}
                 style={{
-                  backgroundColor: '#3c40c6',
-                  color: '#fff',
+                  backgroundColor: '#005ea2',
+                  color: '#FFFFFF',
                   border: 'none',
                   padding: '16px 32px',
                   borderRadius: '8px',
                   fontSize: '18px',
-                  fontWeight: '600',
+                  fontWeight: 600,
                   cursor: 'pointer',
                   width: '100%',
                   maxWidth: '300px'
@@ -611,7 +612,7 @@ export default function LandingPage() {
         </section>
 
         {/* FAQ Section */}
-        <section style={{ padding: '80px 20px', backgroundColor: '#f8f9fa' }}>
+        <section style={{ padding: '80px 20px', backgroundColor: '#F8F9FA' }}>
           <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
             <FAQSection />
           </div>
@@ -620,8 +621,8 @@ export default function LandingPage() {
         {/* Footer Legal */}
         <footer style={{ 
           padding: '40px 20px', 
-          backgroundColor: '#333', 
-          color: '#fff', 
+          backgroundColor: '#333333', 
+          color: '#FFFFFF', 
           textAlign: 'center' 
         }}>
           <div style={{ maxWidth: '800px', margin: '0 auto' }}>
