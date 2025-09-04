@@ -15,12 +15,15 @@ type SamRecord = {
   noticeId: string;
   solicitationNumber?: string;
   title?: string;
+  description?: string;
   ptype?: string;
   postedDate?: string;
   naics?: string[];
   psc?: string[];
   setAside?: string[];
   url?: string;
+  fullParentPathName?: string;
+  organizationName?: string;
 };
 
 const SAM_BASE = process.env.SAM_API_BASE || 'https://api.sam.gov/opportunities/v2/search';
@@ -66,6 +69,12 @@ export async function runOppsDigest({ daysBack = 2 }: { daysBack?: number } = {}
   const pool = makePool();
   const db = makeDb(pool);
   const resend = new Resend(process.env.RESEND_API_KEY);
+  
+  // Track cron run metrics
+  const startTime = Date.now();
+  let totalRecords = 0;
+  let sentCount = 0;
+  let cronRunId: number | null = null;
 
   console.log('🔑 Environment check:');
   console.log('  - RESEND_API_KEY:', process.env.RESEND_API_KEY ? 'SET' : 'MISSING');
@@ -73,6 +82,13 @@ export async function runOppsDigest({ daysBack = 2 }: { daysBack?: number } = {}
   console.log('  - DATABASE_URL:', process.env.DATABASE_URL ? 'SET' : 'MISSING');
 
   try {
+    // Start cron run tracking
+    const [cronRun] = await db.insert(cronRuns).values({ 
+      job: 'opps', 
+      startedAt: new Date(),
+      status: 'running'
+    } as any).returning();
+    cronRunId = cronRun.id;
     console.log('🔍 Fetching users from database...');
     const u = await db
       .select()
@@ -124,7 +140,10 @@ export async function runOppsDigest({ daysBack = 2 }: { daysBack?: number } = {}
         organizationName: search.organizationName,
         organizationCode: search.organizationCode,
         qKeywordsInclude: search.qKeywordsInclude,
-        qKeywordsExclude: search.qKeywordsExclude
+        qKeywordsExclude: search.qKeywordsExclude,
+        // Value-booster mute filters
+        muteAgencies: search.muteAgencies,
+        muteTerms: search.muteTerms
       });
 
       const common = {
@@ -225,16 +244,20 @@ export async function runOppsDigest({ daysBack = 2 }: { daysBack?: number } = {}
           noticeId: it.noticeId,
           solicitationNumber: it.solicitationNumber,
           title: it.title,
+          description: it.description,
           ptype: it.ptype,
           postedDate: it.postedDate,
           naics: it.naicsCodes?.map((x: any) => x.naicsCode),
           psc: it.classificationCode?.split(',') || [],
           setAside: it.setAside?.split(',') || [],
-          url: it.uiLink
+          url: it.uiLink,
+          fullParentPathName: it.fullParentPathName,
+          organizationName: it.organizationName
         }));
 
         console.log(`📋 Processed ${items.length} items from this page`);
         all.push(...items);
+        totalRecords += items.length;
         offset += items.length;
         if (offset >= total || items.length === 0) break;
       }
@@ -258,10 +281,32 @@ export async function runOppsDigest({ daysBack = 2 }: { daysBack?: number } = {}
           return false;
         }
         
+        // Mute agencies filtering (new value-booster)
+        if (search.muteAgencies?.length) {
+          const agency = r.fullParentPathName || r.organizationName || '';
+          const shouldMuteAgency = search.muteAgencies.some(muteAgency => 
+            agency.toLowerCase().includes(muteAgency.toLowerCase())
+          );
+          if (shouldMuteAgency) {
+            return false;
+          }
+        }
+        
+        // Mute terms filtering (new value-booster)
+        if (search.muteTerms?.length) {
+          const text = `${r.title || ''} ${r.description || ''}`.toLowerCase();
+          const shouldMuteTerm = search.muteTerms.some(muteTerm => 
+            text.includes(muteTerm.toLowerCase())
+          );
+          if (shouldMuteTerm) {
+            return false;
+          }
+        }
+        
         return true;
       });
       
-      console.log(`✅ Filtered records (base types, no amendments, keyword filters): ${filtered.length}`);
+      console.log(`✅ Filtered records (base types, no amendments, keyword filters, mute filters): ${filtered.length}`);
 
       if (filtered.length === 0) {
         console.log('⚠️  No filtered records found for user - skipping');
@@ -302,6 +347,7 @@ export async function runOppsDigest({ daysBack = 2 }: { daysBack?: number } = {}
             html 
           });
           console.log('✅ Email sent successfully:', result);
+          sentCount += toSend.length;
         } catch (emailError) {
           console.error('❌ Email send failed:', emailError);
           throw emailError;
@@ -321,13 +367,53 @@ export async function runOppsDigest({ daysBack = 2 }: { daysBack?: number } = {}
       console.log(`✅ User ${usr.email} processing complete\n`);
   }
   
+  
   console.log('🎉 All users processed successfully');
-  await db.insert(cronRuns).values({ job: 'opps', ok: true } as any);
+  
+  // Update cron run with success metrics
+  if (cronRunId) {
+    const endTime = Date.now();
+    const durationMs = endTime - startTime;
+    await db.update(cronRuns)
+      .set({
+        finishedAt: new Date(),
+        durationMs,
+        totalRecords,
+        sentCount,
+        status: 'completed',
+        ok: true
+      } as any)
+      .where(eq(cronRuns.id, cronRunId));
+    
+    console.log('📊 Cron run metrics:', { 
+      durationMs, 
+      totalRecords, 
+      sentCount, 
+      status: 'completed' 
+    });
+  }
   } catch (err: any) {
     console.error('❌ Critical error in runOppsDigest:', err);
-    try {
-      await db.insert(cronRuns).values({ job: 'opps', ok: false, error: String(err?.message || err) } as any);
-    } catch {}
+    
+    // Update cron run with error details
+    if (cronRunId) {
+      const endTime = Date.now();
+      const durationMs = endTime - startTime;
+      try {
+        await db.update(cronRuns)
+          .set({
+            finishedAt: new Date(),
+            durationMs,
+            totalRecords,
+            sentCount,
+            status: 'failed',
+            ok: false,
+            errCode: err?.code || 'UNKNOWN',
+            notes: String(err?.message || err)
+          } as any)
+          .where(eq(cronRuns.id, cronRunId));
+      } catch {}
+    }
     throw err;
   } finally {
     console.log('🔌 Closing database connection');

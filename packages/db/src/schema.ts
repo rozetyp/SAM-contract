@@ -24,6 +24,10 @@ export const searches = pgTable('searches', {
   organizationName: text('organization_name'), // Agency name
   organizationCode: text('organization_code'), // Agency code
   
+  // Mute functionality fields (per product spec)
+  muteTerms: text('mute_terms').array(), // Terms to mute from emails
+  muteAgencies: text('mute_agencies').array(), // Agencies to mute from emails
+  
   // Legacy fields for backward compatibility
   naics: text('naics').array(),
   psc: text('psc').array(),
@@ -53,8 +57,36 @@ export const sentNoticeIds = pgTable(
 
 export const cronRuns = pgTable('cron_runs', {
   id: serial('id').primaryKey(),
-  job: varchar('job', { length: 64 }).notNull(),
+  startedAt: timestamp('started_at').notNull().defaultNow(),
+  finishedAt: timestamp('finished_at'),
+  durationMs: integer('duration_ms'),
+  totalRecords: integer('total_records'),
+  sentCount: integer('sent_count'),
+  status: varchar('status', { length: 32 }).notNull().default('running'), // running, ok, error
+  errCode: varchar('err_code', { length: 64 }),
+  notes: text('notes'),
+  
+  // Legacy fields for backward compatibility
+  job: varchar('job', { length: 64 }).notNull().default('opps'),
   ok: boolean('ok').notNull().default(true),
   error: text('error'),
   ranAt: timestamp('ran_at').notNull().defaultNow()
+});
+
+// Value-booster: Exclusions mini-monitor (≤5 watches per spec)
+export const exclusionWatches = pgTable('exclusion_watches', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').notNull(),
+  entity: text('entity'), // Entity name to watch
+  uei: text('uei'), // UEI to watch (alternative to entity)
+  lastSeenId: text('last_seen_id'), // Track last seen exclusion ID
+  createdAt: timestamp('created_at').notNull().defaultNow()
+});
+
+export const exclusionAlerts = pgTable('exclusion_alerts', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').notNull(),
+  watchId: integer('watch_id').notNull(),
+  exclusionId: text('exclusion_id').notNull(), // ID from GSA Exclusions API
+  seenAt: timestamp('seen_at').notNull().defaultNow()
 });

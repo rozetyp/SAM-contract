@@ -57,6 +57,13 @@
       "when": 1756912116042,
       "tag": "0007_tough_ares",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1756978896586,
+      "tag": "0008_goofy_the_santerians",
+      "breakpoints": true
     }
   ]
 }
