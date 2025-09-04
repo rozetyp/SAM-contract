@@ -28,6 +28,16 @@ type SamRecord = {
 
 const SAM_BASE = process.env.SAM_API_BASE || 'https://api.sam.gov/opportunities/v2/search';
 
+// Rate limiting configuration
+const RATE_LIMIT_CONFIG = {
+  maxApiCallsPerUser: parseInt(process.env.SAM_MAX_API_CALLS_PER_USER || '10'),
+  delayBetweenApiCalls: parseInt(process.env.SAM_DELAY_BETWEEN_API_CALLS || '2000'), // 2 seconds
+  delayBetweenUsers: parseInt(process.env.SAM_DELAY_BETWEEN_USERS || '5000'), // 5 seconds
+  maxRetries: parseInt(process.env.SAM_MAX_RETRIES || '3'),
+  safetyOffsetThreshold: parseInt(process.env.SAM_SAFETY_OFFSET_THRESHOLD || '1000'),
+  safetyMinItemsPerPage: parseInt(process.env.SAM_SAFETY_MIN_ITEMS_PER_PAGE || '10')
+};
+
 function buildQuery(params: Record<string, string | string[] | number | undefined>) {
   const qp: Record<string, string> = {};
   for (const [k, v] of Object.entries(params)) {
@@ -190,56 +200,91 @@ export async function runOppsDigest({ daysBack = 2 }: { daysBack?: number } = {}
 
       let offset = 0;
       const all: SamRecord[] = [];
+      let apiCallCount = 0;
+      const maxApiCallsPerUser = RATE_LIMIT_CONFIG.maxApiCallsPerUser; // Limit API calls per user to prevent excessive usage
+      
       while (true) {
-        console.log(`📄 Fetching page at offset ${offset}...`);
+        // Check if we've exceeded our per-user API call limit
+        if (apiCallCount >= maxApiCallsPerUser) {
+          console.warn(`⚠️  Reached max API calls (${maxApiCallsPerUser}) for user ${usr.email} - stopping pagination`);
+          break;
+        }
+        
+        console.log(`📄 Fetching page at offset ${offset} (API call #${apiCallCount + 1})...`);
         const qs = stringify({ ...params, offset });
         const url = `${SAM_BASE}?${qs}`;
+
+        // Add delay between API calls (not just between users)
+        if (apiCallCount > 0) {
+          console.log(`⏳ Waiting ${RATE_LIMIT_CONFIG.delayBetweenApiCalls/1000} seconds between API calls...`);
+          await delay(RATE_LIMIT_CONFIG.delayBetweenApiCalls);
+        }
 
         // Simple retry mechanism instead of pRetry
         let res;
         let lastError;
-        for (let attempt = 0; attempt < 3; attempt++) {
+        let retryCount = 0;
+        const maxRetries = RATE_LIMIT_CONFIG.maxRetries;
+        
+        for (let attempt = 0; attempt < maxRetries; attempt++) {
           try {
-            const r = await fetch(url);
+            const r = await fetch(url, {
+              headers: {
+                'User-Agent': 'SAM-Contract-Digest/1.0'
+              }
+            });
             if (r.status === 401) {
               console.error('SAM API error 401 Unauthorized');
               res = r; // do not retry
               break;
             }
             if (r.status === 429) {
-              console.error('SAM API error 429 Too Many Requests');
+              console.error(`SAM API error 429 Too Many Requests (attempt ${attempt + 1}/${maxRetries})`);
               const ra = r.headers.get('retry-after');
-              const ms = ra ? Number(ra) * 1000 : 1000;
-              await delay(ms);
+              const backoffMs = ra ? Number(ra) * 1000 : Math.pow(2, attempt) * 1000; // Exponential backoff
+              console.log(`⏳ Rate limited - waiting ${backoffMs}ms before retry...`);
+              await delay(backoffMs);
+              retryCount++;
               continue; // Retry
             }
             if (r.status >= 500) {
-              await delay(500);
+              console.error(`SAM API server error ${r.status} (attempt ${attempt + 1}/${maxRetries})`);
+              await delay(1000 * Math.pow(2, attempt)); // Exponential backoff for server errors
+              retryCount++;
               continue; // Retry
             }
             res = r;
             break;
           } catch (error) {
             lastError = error;
-            if (attempt < 2) await delay(500); // Wait before retry
+            console.error(`Network error on attempt ${attempt + 1}:`, error);
+            if (attempt < maxRetries - 1) {
+              await delay(1000 * Math.pow(2, attempt)); // Exponential backoff for network errors
+            }
           }
         }
         
         if (!res) {
-          throw lastError || new Error('Max retries exceeded');
+          throw lastError || new Error(`Max retries (${maxRetries}) exceeded for API call`);
+        }
+
+        // If we exhausted retries due to rate limiting, stop processing this user
+        if (retryCount >= maxRetries && res.status === 429) {
+          console.error(`🚨 Rate limit retry exhaustion for user ${usr.email} - skipping remaining processing`);
+          break;
         }
 
         const json: any = await res.json();
         const total: number = json.totalRecords ?? 0;
-        console.log(`📊 API Response: ${total} total records, status: ${res.status}`);
+        console.log(`📊 API Response: ${total} total records, status: ${res.status}, API calls: ${apiCallCount + 1}`);
         
         if (res.status === 401 || res.status === 429) {
           const errorMsg = res.status === 401 ? 'SAM API authentication failed' : 'SAM API rate limit exceeded';
-          console.error('🚨 ALERT: SAM API auth/rate limited', res.status, { userId: usr.id });
+          console.error('🚨 ALERT: SAM API auth/rate limited', res.status, { userId: usr.id, apiCallCount: apiCallCount + 1 });
           throw new Error(`${errorMsg} (HTTP ${res.status})`);
         }
         if (total === 0) {
-          console.warn('⚠️  WARN: zero records in window', { userId: usr.id, daysBack });
+          console.warn('⚠️  WARN: zero records in window', { userId: usr.id, daysBack, apiCallCount: apiCallCount + 1 });
         }
 
         const items: SamRecord[] = (json.opportunitiesData || []).map((it: any) => ({
@@ -257,11 +302,19 @@ export async function runOppsDigest({ daysBack = 2 }: { daysBack?: number } = {}
           organizationName: it.organizationName
         }));
 
-        console.log(`📋 Processed ${items.length} items from this page`);
+        console.log(`📋 Processed ${items.length} items from this page (API call #${apiCallCount + 1})`);
         all.push(...items);
         totalRecords += items.length;
+        apiCallCount++;
+        
         offset += items.length;
         if (offset >= total || items.length === 0) break;
+        
+        // Safety check: if we're getting very few results per page, we might be in an infinite loop
+        if (items.length > 0 && items.length < RATE_LIMIT_CONFIG.safetyMinItemsPerPage && offset > RATE_LIMIT_CONFIG.safetyOffsetThreshold) {
+          console.warn(`⚠️  Safety check: Very few results per page after ${RATE_LIMIT_CONFIG.safetyOffsetThreshold}+ records - stopping to prevent infinite loop`);
+          break;
+        }
       }
 
       console.log(`🎯 Total records fetched: ${all.length}`);
@@ -376,8 +429,9 @@ export async function runOppsDigest({ daysBack = 2 }: { daysBack?: number } = {}
       
       // Add delay between users to respect SAM.gov API rate limits
       if (u.indexOf(usr) < u.length - 1) { // Don't delay after the last user
-        console.log('⏳ Waiting 3 seconds before processing next user...');
-        await delay(3000);
+        const delayMs = RATE_LIMIT_CONFIG.delayBetweenUsers;
+        console.log(`⏳ Waiting ${delayMs/1000} seconds before processing next user...`);
+        await delay(delayMs);
       }
   }
   
