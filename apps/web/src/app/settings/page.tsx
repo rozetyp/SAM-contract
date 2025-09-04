@@ -107,6 +107,8 @@ export default function SettingsPage() {
           setSelectedAgency(j.search.agency || '');
           setIncludeWords(j.search.includeWords || '');
           setExcludeWords(j.search.excludeWords || '');
+          setMuteAgencies(j.search.muteAgencies || []);
+          setMuteTerms(j.search.muteTerms || []);
         }
       } else {
         setPaid(false);
@@ -120,12 +122,14 @@ export default function SettingsPage() {
   const [selectedAgency, setSelectedAgency] = useState('');
   const [includeWords, setIncludeWords] = useState('');
   const [excludeWords, setExcludeWords] = useState('');
+  const [muteAgencies, setMuteAgencies] = useState<string[]>([]);
+  const [muteTerms, setMuteTerms] = useState<string[]>([]);
   
   const [previewData, setPreviewData] = useState<any>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
 
   useEffect(() => {
-    const hasCriteria = selectedNaics.length || selectedPsc.length || selectedSetAside.length || selectedAgency || includeWords || excludeWords;
+    const hasCriteria = selectedNaics.length || selectedPsc.length || selectedSetAside.length || selectedAgency || includeWords || excludeWords || muteAgencies.length || muteTerms.length;
     if (!hasCriteria) {
       setPreviewData(null);
       return;
@@ -135,18 +139,37 @@ export default function SettingsPage() {
       fetch('/api/preview', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ naics: selectedNaics, psc: selectedPsc, setaside: selectedSetAside, agency: selectedAgency, includeWords, excludeWords })
+        body: JSON.stringify({ 
+          naics: selectedNaics, 
+          psc: selectedPsc, 
+          setaside: selectedSetAside, 
+          agency: selectedAgency, 
+          includeWords, 
+          excludeWords,
+          muteAgencies,
+          muteTerms
+        })
       }).then(r => r.json()).then(setPreviewData).catch(() => setPreviewData(null)).finally(() => setPreviewLoading(false));
     }, 500);
     return () => clearTimeout(debounceTimer);
-  }, [selectedNaics, selectedPsc, selectedSetAside, selectedAgency, includeWords, excludeWords]);
+  }, [selectedNaics, selectedPsc, selectedSetAside, selectedAgency, includeWords, excludeWords, muteAgencies, muteTerms]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const resp = await fetch('/api/settings', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ email, naics: selectedNaics, psc: selectedPsc, setaside: selectedSetAside, agency: selectedAgency, includeWords, excludeWords })
+      body: JSON.stringify({ 
+        email, 
+        naics: selectedNaics, 
+        psc: selectedPsc, 
+        setaside: selectedSetAside, 
+        agency: selectedAgency, 
+        includeWords, 
+        excludeWords,
+        muteAgencies,
+        muteTerms
+      })
     });
     const j = await resp.json();
     if (resp.status === 402) {
@@ -266,7 +289,114 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {(selectedNaics.length > 0 || selectedPsc.length > 0 || selectedSetAside.length > 0 || selectedAgency || includeWords || excludeWords) && (
+        <div style={{ ...formGroupStyle, opacity: paid ? 1 : 0.7, padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #e9ecef' }}>
+          <h3 style={{ margin: '0 0 16px', fontSize: '18px', color: '#333' }}>🔇 Mute Filters (Value Booster)</h3>
+          <p style={{ ...pStyle, marginBottom: '20px' }}>
+            Permanently suppress content from specific agencies or containing certain terms. These can also be added directly from your email digest.
+          </p>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div>
+              <label style={labelStyle}>🏛️ Muted Agencies</label>
+              <p style={pStyle}>Hide all opportunities from these agencies.</p>
+              <div style={{ marginBottom: '8px' }}>
+                <input 
+                  type="text" 
+                  placeholder="e.g., Department of Agriculture"
+                  style={inputStyle}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      const value = (e.target as HTMLInputElement).value.trim();
+                      if (value && !muteAgencies.includes(value)) {
+                        setMuteAgencies([...muteAgencies, value]);
+                        (e.target as HTMLInputElement).value = '';
+                      }
+                    }
+                  }}
+                />
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                {muteAgencies.map((agency, idx) => (
+                  <span key={idx} style={{ 
+                    backgroundColor: '#dc3545', 
+                    color: 'white', 
+                    padding: '4px 8px', 
+                    borderRadius: '12px', 
+                    fontSize: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}>
+                    {agency}
+                    <button 
+                      type="button"
+                      onClick={() => setMuteAgencies(muteAgencies.filter((_, i) => i !== idx))}
+                      style={{ 
+                        background: 'none', 
+                        border: 'none', 
+                        color: 'white', 
+                        cursor: 'pointer',
+                        padding: '0',
+                        fontSize: '14px'
+                      }}
+                    >×</button>
+                  </span>
+                ))}
+              </div>
+            </div>
+            
+            <div>
+              <label style={labelStyle}>💬 Muted Terms</label>
+              <p style={pStyle}>Hide opportunities containing these terms.</p>
+              <div style={{ marginBottom: '8px' }}>
+                <input 
+                  type="text" 
+                  placeholder="e.g., janitorial, food service"
+                  style={inputStyle}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      const value = (e.target as HTMLInputElement).value.trim();
+                      if (value && !muteTerms.includes(value)) {
+                        setMuteTerms([...muteTerms, value]);
+                        (e.target as HTMLInputElement).value = '';
+                      }
+                    }
+                  }}
+                />
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                {muteTerms.map((term, idx) => (
+                  <span key={idx} style={{ 
+                    backgroundColor: '#dc3545', 
+                    color: 'white', 
+                    padding: '4px 8px', 
+                    borderRadius: '12px', 
+                    fontSize: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}>
+                    {term}
+                    <button 
+                      type="button"
+                      onClick={() => setMuteTerms(muteTerms.filter((_, i) => i !== idx))}
+                      style={{ 
+                        background: 'none', 
+                        border: 'none', 
+                        color: 'white', 
+                        cursor: 'pointer',
+                        padding: '0',
+                        fontSize: '14px'
+                      }}
+                    >×</button>
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {(selectedNaics.length > 0 || selectedPsc.length > 0 || selectedSetAside.length > 0 || selectedAgency || includeWords || excludeWords || muteAgencies.length > 0 || muteTerms.length > 0) && (
           <div style={{ marginBottom: '24px', padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #e9ecef' }}>
             <h4 style={{ margin: '0 0 16px', fontSize: '18px', color: '#333' }}>📊 Live Preview (Last 7 Days)</h4>
             {previewLoading ? (

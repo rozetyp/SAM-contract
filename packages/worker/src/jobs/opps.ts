@@ -331,7 +331,13 @@ export async function runOppsDigest({ daysBack = 2 }: { daysBack?: number } = {}
       }
 
       console.log('📝 Generating email content...');
-      const html = createDigestHtml({ email: usr.email, records: toSend });
+      const baseUrl = process.env.NEXT_PUBLIC_URL || process.env.BASE_URL || 'https://bidbeacon.ai';
+      const html = createDigestHtml({ 
+        email: usr.email, 
+        records: toSend, 
+        userId: usr.id,
+        baseUrl 
+      });
 
       if (!process.env.RESEND_API_KEY) throw new Error('RESEND_API_KEY missing');
       if (process.env.RESEND_DRY === 'true') {

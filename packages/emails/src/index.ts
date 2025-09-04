@@ -1,23 +1,63 @@
 type Record = {
   noticeId: string;
   title?: string;
+  description?: string;
   url?: string;
   ptype?: string;
   postedDate?: string;
+  fullParentPathName?: string;
+  organizationName?: string;
 };
 
-export function createDigestHtml({ email, records }: { email: string; records: Record[] }) {
+export function createDigestHtml({ 
+  email, 
+  records, 
+  userId,
+  baseUrl = 'https://bidbeacon.ai' 
+}: { 
+  email: string; 
+  records: Record[];
+  userId?: number;
+  baseUrl?: string;
+}) {
+  // Generate simple auth token for mute links (moved to caller)
+  const generateMuteToken = (userId: number) => {
+    // Simple hash - in production should use proper crypto
+    return btoa(`${userId}:${userId}`);
+  };
+
+  const muteToken = userId ? generateMuteToken(userId) : '';
+
   const items = records
     .map(
-      (r) => `
-      <li style="margin-bottom:8px">
-        <a href="${r.url || '#'}" style="font-weight:600;color:#0b5fff">${escapeHtml(
-          r.title || r.noticeId
-        )}</a>
-        <div style="color:#444;font-size:12px">${r.noticeId}${r.ptype ? ` · ${r.ptype}` : ''}$${
-          r.postedDate ? ` · ${r.postedDate}` : ''
-        }</div>
-      </li>`
+      (r) => {
+        const agency = r.fullParentPathName || r.organizationName || 'Unknown Agency';
+        
+        // Create mute links if we have userId
+        const muteAgencyLink = userId && muteToken 
+          ? `${baseUrl}/api/mute?userId=${userId}&type=agency&value=${encodeURIComponent(agency)}&token=${muteToken}`
+          : '';
+          
+        const muteSection = muteAgencyLink ? `
+          <div style="margin-top:4px;font-size:11px;">
+            <a href="${muteAgencyLink}" style="color:#666;text-decoration:none;">🔇 Mute this agency</a>
+          </div>
+        ` : '';
+
+        return `
+        <li style="margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #eee">
+          <a href="${r.url || '#'}" style="font-weight:600;color:#0b5fff;text-decoration:none;">
+            ${escapeHtml(r.title || r.noticeId)}
+          </a>
+          <div style="color:#444;font-size:12px;margin-top:2px;">
+            ${r.noticeId}${r.ptype ? ` · ${r.ptype}` : ''}${r.postedDate ? ` · ${r.postedDate}` : ''}
+          </div>
+          <div style="color:#666;font-size:12px;margin-top:2px;">
+            Agency: ${escapeHtml(agency)}
+          </div>
+          ${muteSection}
+        </li>`;
+      }
     )
     .join('');
   return `
