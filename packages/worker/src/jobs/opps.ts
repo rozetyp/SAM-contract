@@ -58,7 +58,7 @@ function shouldExclude(title?: string, description?: string, excludeWords?: stri
   return words.some(word => text.includes(word));
 }
 
-export async function runOppsDigest({ windowHours = 48 }: { windowHours?: number } = {}) {
+export async function runOppsDigest({ windowHours = 25 }: { windowHours?: number } = {}) {
   console.log('🚀 Starting SAM.gov opportunities digest');
   console.log('📅 Timestamp:', new Date().toISOString());
   console.log('⏰ Window hours:', windowHours);
