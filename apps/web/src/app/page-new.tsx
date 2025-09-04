@@ -46,7 +46,7 @@ const ComparisonTable = () => (
         </tr>
         <tr>
           <td style={{ padding: '12px', fontWeight: '500' }}>Delivery</td>
-          <td style={{ padding: '12px', textAlign: 'center', backgroundColor: '#e3f2fd', fontWeight: '600' }}>Daily 13:00 UTC (2-day window)</td>
+          <td style={{ padding: '12px', textAlign: 'center', backgroundColor: '#e3f2fd', fontWeight: '600' }}>Daily 13:00 UTC (25h window)</td>
           <td style={{ padding: '12px', textAlign: 'center' }}>Daily/weekly</td>
           <td style={{ padding: '12px', textAlign: 'center' }}>Suite alerts</td>
           <td style={{ padding: '12px', textAlign: 'center' }}>Suite alerts</td>
@@ -70,7 +70,7 @@ const FAQSection = () => {
     },
     {
       question: "What is the delivery schedule?",
-      answer: "Digests are delivered daily at 1:00 PM UTC covering opportunities posted in the last 2 calendar days. This ensures comprehensive coverage across time zones and accounts for weekend posting variations while our deduplication system prevents any repeats."
+      answer: "Digests are delivered daily at 1:00 PM UTC with a 25-hour window of new opportunities. This optimized timing ensures you receive fresh opportunities without overwhelming your inbox or missing critical deadlines."
     },
     {
       question: "Is this an official government service?",
@@ -201,7 +201,7 @@ const SampleEmailModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
           
           <div style={{ marginBottom: '20px', padding: '12px', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
             <p style={{ margin: 0, fontSize: '14px' }}>
-              <strong>Found 5 new opportunities</strong> matching your criteria from the last 2 days.
+              <strong>Found 5 new opportunities</strong> matching your criteria in the last 25 hours.
             </p>
           </div>
           
@@ -265,7 +265,7 @@ const SampleEmailModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
           
           <div style={{ marginTop: '24px', padding: '16px', backgroundColor: '#f8f9fa', borderRadius: '4px', fontSize: '12px', color: '#666' }}>
             <p style={{ margin: 0 }}>
-              This digest covers opportunities posted in the last 2 calendar days. 
+              This digest covers opportunities posted in the last 25 hours. 
               All amendments and duplicates have been filtered out.
             </p>
           </div>

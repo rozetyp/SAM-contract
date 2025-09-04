@@ -58,10 +58,10 @@ function shouldExclude(title?: string, description?: string, excludeWords?: stri
   return words.some(word => text.includes(word));
 }
 
-export async function runOppsDigest({ windowHours = 25 }: { windowHours?: number } = {}) {
+export async function runOppsDigest({ daysBack = 2 }: { daysBack?: number } = {}) {
   console.log('🚀 Starting SAM.gov opportunities digest');
   console.log('📅 Timestamp:', new Date().toISOString());
-  console.log('⏰ Window hours:', windowHours);
+  console.log('📅 Days back for search window:', daysBack);
   
   const pool = makePool();
   const db = makeDb(pool);
@@ -91,7 +91,10 @@ export async function runOppsDigest({ windowHours = 25 }: { windowHours?: number
     }
 
     const postedTo = new Date();
-    const postedFrom = new Date(postedTo.getTime() - windowHours * 3600_000);
+    // Use calendar days approach: query yesterday → today (2 days)
+    // This handles timezone variations and weekend posting drift
+    const postedFrom = new Date(postedTo);
+    postedFrom.setDate(postedFrom.getDate() - (daysBack - 1)); // -1 because we include today
 
   for (const usr of u) {
       console.log(`\n👤 Processing user: ${usr.email} (ID: ${usr.id})`);
@@ -131,6 +134,12 @@ export async function runOppsDigest({ windowHours = 25 }: { windowHours?: number
         ptype: 'o,k,p',
         api_key: process.env.SAM_OPPS_API_KEY
       } as const;
+
+      console.log('📅 Date range for API query:', {
+        postedFrom: common.postedFrom,
+        postedTo: common.postedTo,
+        daysSpan: daysBack
+      });
 
       // Use spec-compliant fields with fallback to legacy fields
       const naicsData = search.ncode || search.naics || [];
@@ -209,7 +218,7 @@ export async function runOppsDigest({ windowHours = 25 }: { windowHours?: number
           console.error('🚨 ALERT: SAM API auth/rate limited', res.status, { userId: usr.id });
         }
         if (total === 0) {
-          console.warn('⚠️  WARN: zero records in window', { userId: usr.id, windowHours });
+          console.warn('⚠️  WARN: zero records in window', { userId: usr.id, daysBack });
         }
 
         const items: SamRecord[] = (json.opportunitiesData || []).map((it: any) => ({
