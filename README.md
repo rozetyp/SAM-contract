@@ -7,6 +7,35 @@ A micro-SaaS application that delivers personalized government contract opportun
 ![Railway](https://img.shields.io/badge/Railway-Deployed-purple?style=flat&logo=railway)
 ![Stripe](https://img.shields.io/badge/Stripe-Payments-blue?style=flat&logo=stripe)
 
+## 🚀 Quick Start
+
+**📖 For complete setup instructions, see [SETUP.md](./SETUP.md)**
+
+### Prerequisites
+- Node.js 18+
+- pnpm
+- Railway account
+- Stripe account
+- Resend account
+- SAM.gov API key
+
+### Local Development
+```bash
+git clone <repository-url>
+cd sam-contract
+pnpm install
+cp .env.example .env.local
+# Fill in your environment variables
+pnpm --filter=web run dev
+```
+
+### Production Deployment
+```bash
+railway login
+railway init
+railway up
+```
+
 ## 🚀 Features
 
 - **🔍 Custom Search Criteria**: Keywords, NAICS codes, PSC codes, set-aside programs
@@ -48,6 +77,9 @@ A micro-SaaS application that delivers personalized government contract opportun
          ▼                       ▼
 ┌─────────────────┐    ┌─────────────────┐
 │     Resend      │    │  Email Delivery │
+│   (Transactional)│    │  (Marketing)   │
+└─────────────────┘    └─────────────────┘
+```
 ```
 
 ## 🛠️ Installation & Setup

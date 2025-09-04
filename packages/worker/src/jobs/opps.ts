@@ -234,7 +234,9 @@ export async function runOppsDigest({ daysBack = 2 }: { daysBack?: number } = {}
         console.log(`📊 API Response: ${total} total records, status: ${res.status}`);
         
         if (res.status === 401 || res.status === 429) {
+          const errorMsg = res.status === 401 ? 'SAM API authentication failed' : 'SAM API rate limit exceeded';
           console.error('🚨 ALERT: SAM API auth/rate limited', res.status, { userId: usr.id });
+          throw new Error(`${errorMsg} (HTTP ${res.status})`);
         }
         if (total === 0) {
           console.warn('⚠️  WARN: zero records in window', { userId: usr.id, daysBack });
@@ -371,6 +373,12 @@ export async function runOppsDigest({ daysBack = 2 }: { daysBack?: number } = {}
         }
       }
       console.log(`✅ User ${usr.email} processing complete\n`);
+      
+      // Add delay between users to respect SAM.gov API rate limits
+      if (u.indexOf(usr) < u.length - 1) { // Don't delay after the last user
+        console.log('⏳ Waiting 3 seconds before processing next user...');
+        await delay(3000);
+      }
   }
   
   
@@ -412,9 +420,9 @@ export async function runOppsDigest({ daysBack = 2 }: { daysBack?: number } = {}
             durationMs,
             totalRecords,
             sentCount,
-            status: 'failed',
+            status: err?.message?.includes('rate limit') ? 'rate_limited' : 'failed',
             ok: false,
-            errCode: err?.code || 'UNKNOWN',
+            errCode: err?.message?.includes('rate limit') ? 'RATE_LIMITED' : (err?.code || 'UNKNOWN'),
             notes: String(err?.message || err)
           } as any)
           .where(eq(cronRuns.id, cronRunId));
@@ -428,7 +436,13 @@ export async function runOppsDigest({ daysBack = 2 }: { daysBack?: number } = {}
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  runOppsDigest().then(() => {
-    // done
-  });
+  runOppsDigest()
+    .then(() => {
+      console.log('✅ Cron job completed successfully');
+      process.exit(0);
+    })
+    .catch((err) => {
+      console.error('❌ Cron job failed:', err);
+      process.exit(1);
+    });
 }
