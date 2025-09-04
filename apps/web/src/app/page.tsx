@@ -194,7 +194,7 @@ const SampleEmailModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
             <h1 style={{ margin: 0, fontSize: '18px', color: '#005ea2' }}>
               Your SAM.gov Daily Digest
             </h1>
-            <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#666' }}>
+            <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#666666' }}>
               <strong>From:</strong> alerts@bidbeacon.com<br />
               <strong>Subject:</strong> Your SAM.gov Daily Digest - 5 New Opportunities
             </p>
@@ -240,7 +240,7 @@ const SampleEmailModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
               <h3 style={{ margin: '0 0 8px', fontSize: '16px', color: '#005ea2' }}>
                 {opp.title}
               </h3>
-              <div style={{ fontSize: '14px', color: '#666', marginBottom: '12px' }}>
+              <div style={{ fontSize: '14px', color: '#666666', marginBottom: '12px' }}>
                 <div><strong>Agency:</strong> {opp.agency}</div>
                 <div><strong>NAICS:</strong> {opp.naics}</div>
                 <div><strong>Response Deadline:</strong> {opp.deadline}</div>
@@ -264,7 +264,7 @@ const SampleEmailModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
             </div>
           ))}
           
-          <div style={{ marginTop: '24px', padding: '16px', backgroundColor: '#F8F9FA', borderRadius: '4px', fontSize: '12px', color: '#666' }}>
+          <div style={{ marginTop: '24px', padding: '16px', backgroundColor: '#F8F9FA', borderRadius: '4px', fontSize: '12px', color: '#666666' }}>
             <p style={{ margin: 0 }}>
               This digest covers opportunities posted in the last 2 calendar days. 
               All amendments and duplicates have been filtered out.
@@ -409,7 +409,7 @@ export default function LandingPage() {
                 <h3 style={{ fontSize: '22px', fontWeight: 600, marginBottom: '16px', color: '#333333' }}>
                   1. Define Your Targets
                 </h3>
-                <p style={{ fontSize: '16px', color: '#666' }}>
+                <p style={{ fontSize: '16px', color: '#666666' }}>
                   Effortlessly define your target market using our guided interface with NAICS/PSC codes, set-aside programs, and agency filters.
                 </p>
               </div>
@@ -418,7 +418,7 @@ export default function LandingPage() {
                 <h3 style={{ fontSize: '22px', fontWeight: 600, marginBottom: '16px', color: '#333333' }}>
                   2. Receive Curated Opportunities
                 </h3>
-                <p style={{ fontSize: '16px', color: '#666' }}>
+                <p style={{ fontSize: '16px', color: '#666666' }}>
                   Our system filters irrelevant amendments and deduplicates notices, ensuring you receive only high-signal opportunities.
                 </p>
               </div>
@@ -427,7 +427,7 @@ export default function LandingPage() {
                 <h3 style={{ fontSize: '22px', fontWeight: 600, marginBottom: '16px', color: '#333333' }}>
                   3. Act on Intelligence
                 </h3>
-                <p style={{ fontSize: '16px', color: '#666' }}>
+                <p style={{ fontSize: '16px', color: '#666666' }}>
                   Receive a single, actionable digest each day with properly formatted opportunities and direct links for immediate review on SAM.gov.
                 </p>
               </div>
@@ -441,7 +441,7 @@ export default function LandingPage() {
             <h2 style={{ fontSize: '36px', fontWeight: 700, marginBottom: '24px', color: '#333333' }}>
               A Focused and Actionable Email Digest
             </h2>
-            <p style={{ fontSize: '18px', color: '#666', marginBottom: '40px' }}>
+            <p style={{ fontSize: '18px', color: '#666666', marginBottom: '40px' }}>
               No clutter, no noise. Just the opportunities that match your precise criteria.
             </p>
             
@@ -462,7 +462,7 @@ export default function LandingPage() {
                 borderBottom: '1px solid #CED4DA',
                 textAlign: 'left'
               }}>
-                <div style={{ fontSize: '14px', color: '#666', marginBottom: '8px' }}>
+                <div style={{ fontSize: '14px', color: '#666666', marginBottom: '8px' }}>
                   <strong>From:</strong> alerts@bidbeacon.com
                 </div>
                 <div style={{ fontSize: '16px', fontWeight: 600, color: '#333333' }}>
@@ -485,7 +485,7 @@ export default function LandingPage() {
                   <div style={{ fontWeight: 600, fontSize: '14px', marginBottom: '4px' }}>
                     Cloud Infrastructure Services
                   </div>
-                  <div style={{ fontSize: '12px', color: '#666' }}>
+                  <div style={{ fontSize: '12px', color: '#666666' }}>
                     Department of Defense • NAICS 541511 • Due Oct 15
                   </div>
                 </div>
@@ -494,7 +494,7 @@ export default function LandingPage() {
                   <div style={{ fontWeight: 600, fontSize: '14px', marginBottom: '4px' }}>
                     Cybersecurity Assessment
                   </div>
-                  <div style={{ fontSize: '12px', color: '#666' }}>
+                  <div style={{ fontSize: '12px', color: '#666666' }}>
                     GSA • NAICS 541512 • Due Oct 22
                   </div>
                 </div>
@@ -503,7 +503,7 @@ export default function LandingPage() {
                   <div style={{ fontWeight: 600, fontSize: '14px', marginBottom: '4px' }}>
                     Software Development
                   </div>
-                  <div style={{ fontSize: '12px', color: '#666' }}>
+                  <div style={{ fontSize: '12px', color: '#666666' }}>
                     Department of VA • NAICS 541511 • Due Nov 5
                   </div>
                 </div>
@@ -531,7 +531,7 @@ export default function LandingPage() {
               Why Choose BidBeacon?
             </h2>
             <ComparisonTable />
-            <div style={{ textAlign: 'center', marginTop: '32px', fontSize: '14px', color: '#666' }}>
+            <div style={{ textAlign: 'center', marginTop: '32px', fontSize: '14px', color: '#666666' }}>
               Sources: <a href="https://www.highergov.com/pricing" target="_blank" rel="noopener noreferrer" style={{ color: '#005ea2' }}>HigherGov pricing</a>, 
               {' '}<a href="https://www.govtribe.com" target="_blank" rel="noopener noreferrer" style={{ color: '#005ea2' }}>GovTribe plans</a>, 
               {' '}<a href="https://sam.gov" target="_blank" rel="noopener noreferrer" style={{ color: '#005ea2' }}>SAM.gov help docs</a>
@@ -555,7 +555,7 @@ export default function LandingPage() {
               <div style={{ fontSize: '48px', fontWeight: 700, color: '#005ea2', marginBottom: '8px' }}>
                 $19
               </div>
-              <div style={{ fontSize: '18px', color: '#666', marginBottom: '24px' }}>
+              <div style={{ fontSize: '18px', color: '#666666', marginBottom: '24px' }}>
                 per month
               </div>
               
@@ -605,7 +605,7 @@ export default function LandingPage() {
               </button>
             </div>
             
-            <p style={{ fontSize: '14px', color: '#666', marginTop: '24px' }}>
+            <p style={{ fontSize: '14px', color: '#666666', marginTop: '24px' }}>
               Not affiliated with GSA/SAM.gov
             </p>
           </div>
