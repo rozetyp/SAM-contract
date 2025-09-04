@@ -4,17 +4,23 @@
   },
   "deploy": {
     "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 10
+    "restartPolicyMaxRetries": 10,
+    "healthcheckPath": "/api/health",
+    "healthcheckTimeout": 100
   },
   "services": {
     "web": {
-      "startCommand": "pnpm start"
+      "startCommand": "pnpm start",
+      "healthcheckPath": "/api/health"
     },
     "cron-digest": {
       "startCommand": "pnpm -w run cron:run"
     },
     "worker": {
       "startCommand": "pnpm -C packages/worker start"
+    },
+    "migration": {
+      "startCommand": "pnpm -w run db:migrate && echo 'Migration completed'"
     }
   },
   "cron": {

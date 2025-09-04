@@ -2,7 +2,6 @@
 
 A micro-SaaS application that delivers personalized government contract opportunities from SAM.gov directly to your inbox. Users can set up custom search criteria and receive daily email digests with relevant federal contracting opportunities.
 
-[![GitHub](https://img.shields.io/badge/GitHub-Repository-black?style=flat&logo=github)](https://github.com/rozetyp/SAM-contract)
 ![Next.js](https://img.shields.io/badge/Next.js-14.2-black?style=flat&logo=nextdotjs)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue?style=flat&logo=typescript)
 ![Railway](https://img.shields.io/badge/Railway-Deployed-purple?style=flat&logo=railway)
@@ -149,31 +148,6 @@ SAM_EXCL_API_KEY=reserved_for_future
 
 ### Deployment Steps
 
-✅ **Production Deployment Complete**
-
-The application is fully deployed on Railway with the following services:
-
-1. **Web Service**: Next.js application
-   - Start Command: `pnpm -C apps/web start`
-   - URL: https://web-production-8e472.up.railway.app
-   - Build: Auto from GitHub main branch
-
-2. **Worker Service**: Background job processor  
-   - Start Command: `pnpm -C packages/worker start`
-   - Environment: `NIXPACKS_START_CMD=pnpm -C packages/worker start`
-   - Build: Auto from GitHub main branch
-
-3. **Cron-Digest Service**: Scheduled daily digest
-   - Start Command: `pnpm -w run cron:opps`
-   - Schedule: Daily at 1 PM UTC
-   - Build: Auto from GitHub main branch
-
-4. **PostgreSQL Database**: Railway managed database
-   - Connection: Automatic via `DATABASE_URL`
-   - Backups: Managed by Railway
-
-#### Manual Setup (if recreating):
-
 1. **Install Railway CLI**
    ```bash
    npm install -g @railway/cli
@@ -190,24 +164,28 @@ The application is fully deployed on Railway with the following services:
    railway add --database postgresql
    ```
 
-4. **Deploy Services**
+4. **Deploy Web Service**
    ```bash
    railway up --service web
-   railway up --service worker
-   railway up --service cron-digest
    ```
 
-5. **Configure Worker Service**
+5. **Deploy Worker Service**
    ```bash
-   railway variables --set "NIXPACKS_START_CMD=pnpm -C packages/worker start" --service worker
+   railway up --service worker
    ```
 
 6. **Set Environment Variables**
    ```bash
    railway variables --set "RESEND_API_KEY=your_key" --service web
    railway variables --set "STRIPE_SECRET_KEY=your_key" --service web
-   # Repeat for all required variables
+   # Repeat for all variables and both services
    ```
+
+7. **Setup Cron Job**
+   - Go to Railway Dashboard
+   - Create new Cron Service
+   - Schedule: `0 13 * * *`
+   - Command: `pnpm -w run cron:opps`
 
 ## 💳 Stripe Integration
 
@@ -661,18 +639,11 @@ For technical support or questions:
 
 ## 📊 Current Status
 
-✅ **Production Deployed**: All services running on Railway  
-✅ **Web Application**: Next.js app deployed at `web-production-8e472.up.railway.app`  
-✅ **Worker Service**: Background job processing active  
-✅ **Cron Service**: Daily digest automation operational  
-✅ **Database**: PostgreSQL connected and functional  
+✅ **MVP Complete**: All core features implemented and tested  
+✅ **Production Ready**: Deployed on Railway with monitoring  
 ✅ **Payment Integration**: Stripe subscriptions working  
 ✅ **Email Delivery**: Resend integration functional  
-✅ **Auto-deployment**: GitHub connected to Railway  
+✅ **Cron Scheduling**: Automated daily digest system  
+🔄 **Final Setup**: Railway cron service creation required  
 
-**Fully operational and ready for users!** 🚀
-
-### Service URLs
-- **Web App**: https://web-production-8e472.up.railway.app
-- **GitHub**: https://github.com/rozetyp/SAM-contract
-- **Railway Project**: bidbeacon-dev (production environment)
+**Ready for production use!** 🚀

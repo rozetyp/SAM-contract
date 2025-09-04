@@ -1,20 +1,16 @@
 # Railway Deployment Guide
 
-✅ **STATUS: FULLY DEPLOYED AND OPERATIONAL**
-
 ## Production URLs
 - Web App: `https://web-production-8e472.up.railway.app`
 - Health Check: `https://web-production-8e472.up.railway.app/api/health`
 - Stripe Webhook: `https://web-production-8e472.up.railway.app/api/stripe/webhook`
-- GitHub Repository: `https://github.com/rozetyp/SAM-contract`
 
-## Current Services
-- **Web Service**: Next.js application (auto-deploy from GitHub)
-- **Worker Service**: Background jobs (auto-deploy from GitHub)  
-- **Cron-Digest Service**: Daily email digest (auto-deploy from GitHub)
-- **PostgreSQL Database**: Railway managed database
+## Prerequisites
+1. Push your code to GitHub
+2. Have Railway account ready
+3. Gather all environment variables from .env.example
 
-## Maintenance Notes
+## Deployment Steps
 
 ### 1. Create Railway Project
 ```bash

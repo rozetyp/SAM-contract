@@ -6,13 +6,10 @@ echo "🚀 Starting scheduled SAM.gov cron job..."
 echo "📅 Current time: $(date)"
 echo "⏰ Schedule: Daily at 1 PM UTC (0 13 * * *)"
 
-# Only change directory if we're in Railway container
-if [ -d "/app" ]; then
-  cd /app
-fi
+# Navigate to the app directory
+cd /app
 
-# Run the opportunities digest
-echo "📊 Running opportunities digest..."
+# Run the cron job
 pnpm -w run cron:opps
 
-echo "✅ Opportunities digest completed at: $(date)"
+echo "✅ Cron job completed at: $(date)"

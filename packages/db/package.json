@@ -12,7 +12,7 @@
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --clean",
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
     "db:generate": "drizzle-kit generate --config=drizzle.config.ts",
     "db:migrate": "drizzle-kit migrate --config=drizzle.config.ts"
   },

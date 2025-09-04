@@ -45,7 +45,7 @@ export async function POST(req: Request) {
               .set({ stripeCustomerId: (customerId as any) || existing[0].stripeCustomerId })
               .where(eq(users.id, existing[0].id));
           } else {
-            await db.insert(users).values({ email, plan: 'unpaid' as any, stripeCustomerId: customerId as any }); // Start as unpaid until subscription events
+            await db.insert(users).values({ email, plan: 'trial' as any, stripeCustomerId: customerId as any });
           }
         }
         break;
@@ -59,7 +59,8 @@ export async function POST(req: Request) {
         // If user canceled during trial (cancel_at_period_end while trialing), stop digests immediately
         let plan: any | undefined;
         if (cancelNow) plan = 'canceled' as any;
-        else if (status === 'trialing' || status === 'active') plan = 'paid' as any; // Trial and active both get full access
+        else if (status === 'trialing') plan = 'trial' as any;
+        else if (status === 'active') plan = 'paid' as any;
 
         if (customerId && plan) {
           await db.update(users).set({ plan }).where(eq(users.stripeCustomerId, customerId as any));
