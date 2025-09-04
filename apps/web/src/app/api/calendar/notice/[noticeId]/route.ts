@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic';
+
 /**
  * Calendar (.ics) export for individual notice deadlines
  * Creates RFC 5545 compliant iCalendar event
@@ -8,7 +11,7 @@ import { NextRequest, NextResponse } from 'next/server';
  * 
  * Query params:
  * - title: Opportunity title (optional)
- * - agency: Agency name (optional) 
+ * - agency: Agency name (optional)
  * - deadline: ISO date string for deadline
  * - url: SAM.gov URL for the opportunity
  */

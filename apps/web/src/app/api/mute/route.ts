@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { makeDb, makePool, searches } from '@sam/db';
 import { eq } from 'drizzle-orm';
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic';
+
 /**
  * API endpoint for muting agencies or terms from email links
  * This allows users to quickly mute content directly from their digest emails

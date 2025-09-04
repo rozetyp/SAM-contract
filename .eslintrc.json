@@ -1,5 +1,8 @@
 {
   "root": true,
   "extends": ["next/core-web-vitals"],
-  "ignorePatterns": ["dist/**", "drizzle/**"]
+  "ignorePatterns": ["dist/**", "drizzle/**"],
+  "rules": {
+    "@next/next/no-html-link-for-pages": "off"
+  }
 }

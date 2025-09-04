@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { makeDb, makePool, searches, sentNoticeIds, users } from '@sam/db';
 import { and, eq, gte, lte } from 'drizzle-orm';
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic';
+
 /**
  * CSV Export API endpoint
  * Exports user's daily digest data as CSV file

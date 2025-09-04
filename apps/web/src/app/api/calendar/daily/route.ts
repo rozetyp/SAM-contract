@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { makeDb, makePool, sentNoticeIds, users } from '@sam/db';
 import { and, eq, gte } from 'drizzle-orm';
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic';
+
 /**
  * Daily calendar feed for all user's upcoming deadlines
  * Creates aggregated .ics file with all opportunities

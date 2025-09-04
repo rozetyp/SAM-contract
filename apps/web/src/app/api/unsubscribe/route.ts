@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { makeDb, makePool, users } from '@sam/db';
 import { eq } from 'drizzle-orm';
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic';
+
 /**
  * Unsubscribe endpoint for email compliance
  * Handles both GET (form) and POST (action) requests
