@@ -164,8 +164,8 @@ export async function runOppsDigest({ daysBack = 2 }: { daysBack?: number } = {}
       });
 
       const common = {
-        postedFrom: `${(postedFrom.getMonth() + 1).toString().padStart(2, '0')}/${postedFrom.getDate().toString().padStart(2, '0')}/${postedFrom.getFullYear()}`,
-        postedTo: `${(postedTo.getMonth() + 1).toString().padStart(2, '0')}/${postedTo.getDate().toString().padStart(2, '0')}/${postedTo.getFullYear()}`,
+        postedFrom: `${postedFrom.getFullYear()}-${(postedFrom.getMonth() + 1).toString().padStart(2, '0')}-${postedFrom.getDate().toString().padStart(2, '0')}`,
+        postedTo: `${postedTo.getFullYear()}-${(postedTo.getMonth() + 1).toString().padStart(2, '0')}-${postedTo.getDate().toString().padStart(2, '0')}`,
         limit: 1000,
         ptype: 'o,k,p',
         api_key: process.env.SAM_OPPS_API_KEY
