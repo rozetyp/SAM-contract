@@ -1,0 +1,44 @@
+{
+  "name": "sam-contract",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "cron:opps": "node dist/jobs/opps.js",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "next": "^14.2.7",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "drizzle-orm": "^0.33.0",
+    "pg": "^8.12.0",
+    "resend": "^4.0.0",
+    "stripe": "^16.8.0",
+    "zod": "^3.23.8",
+    "dotenv": "^16.4.5",
+    "undici": "^6.19.8",
+    "p-retry": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.4",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@types/pg": "^8.11.6",
+    "typescript": "^5.6.2",
+    "eslint": "^9.10.0",
+    "eslint-config-next": "^14.2.7",
+    "prettier": "^3.3.3",
+    "drizzle-kit": "^0.24.2",
+    "tsup": "^8.2.4",
+    "vitest": "^2.0.5"
+  },
+  "engines": {
+    "node": ">=18.17.0"
+  }
+}
