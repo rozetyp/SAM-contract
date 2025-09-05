@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
-import { makeDb, makePool, users, searches } from '@sam/db';
+import { NextRequest, NextResponse } from 'next/server';
+import { makeDb, makePool, searches, users } from '../../../lib/index.js';
 import { eq } from 'drizzle-orm';
 
 export async function POST(req: Request) {

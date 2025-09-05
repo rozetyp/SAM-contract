@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { makeDb, makePool, searches, sentNoticeIds, users, cronRuns } from '@sam/db';
+import { makeDb, makePool, searches, sentNoticeIds, users, cronRuns } from '../lib/index.js';
 import { and, eq, inArray } from 'drizzle-orm';
 import { Resend } from 'resend';
 import { setTimeout as delay } from 'node:timers/promises';
@@ -9,7 +9,7 @@ function stringify(obj: Record<string, string | number>) {
   for (const [k, v] of Object.entries(obj)) usp.set(k, String(v));
   return usp.toString();
 }
-import { createDigestHtml } from '@sam/emails';
+import { createDigestHtml } from '../emails/index.js';
 
 type SamRecord = {
   noticeId: string;

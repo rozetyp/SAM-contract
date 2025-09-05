@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { runOppsDigest } from '@sam/worker';
+import { runOppsDigest } from '../../../../jobs/opps.js';
 
 export async function POST() {
   if (process.env.NODE_ENV === 'production') {

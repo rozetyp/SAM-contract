@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { makeDb, makePool, cronRuns } from '@sam/db';
+import { makeDb, makePool, cronRuns } from '../../../lib/index.js';
 import { desc } from 'drizzle-orm';
 
 export async function GET() {
