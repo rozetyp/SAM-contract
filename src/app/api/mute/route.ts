@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { makeDb, makePool, searches } from '@sam/db';
+import { makeDb, makePool, searches } from '../../../lib/index';
 import { eq } from 'drizzle-orm';
 
 // Force dynamic rendering for this API route

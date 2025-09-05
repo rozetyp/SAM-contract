@@ -1,7 +1,7 @@
 import Stripe from 'stripe';
 import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { makeDb, makePool, users } from '@sam/db';
+import { makeDb, makePool, users } from '../../../lib/index';
 import { eq } from 'drizzle-orm';
 import { addDevEvent } from '../../../../lib/devFeed';
 
