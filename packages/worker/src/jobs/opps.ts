@@ -240,6 +240,11 @@ export async function runOppsDigest({ daysBack = 2 }: { daysBack?: number } = {}
                 'User-Agent': 'SAM-Contract-Digest/1.0'
               }
             });
+            if (!r.ok) {
+              console.error(`API call failed with status ${r.status}: ${r.statusText}`);
+              const text = await r.text();
+              console.error(`Response body: ${text}`);
+            }
             if (r.status === 401) {
               console.error('SAM API error 401 Unauthorized');
               res = r; // do not retry
