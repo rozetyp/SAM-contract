@@ -500,15 +500,3 @@ export async function runOppsDigest({ daysBack = 2 }: { daysBack?: number } = {}
     await pool.end();
   }
 }
-
-if (import.meta.url === `file://${process.argv[1]}`) {
-  runOppsDigest()
-    .then(() => {
-      console.log('✅ Cron job completed successfully');
-      process.exit(0);
-    })
-    .catch((err) => {
-      console.error('❌ Cron job failed:', err);
-      process.exit(1);
-    });
-}
