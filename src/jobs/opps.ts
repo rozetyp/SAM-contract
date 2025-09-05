@@ -30,18 +30,16 @@ const SAM_BASE = process.env.SAM_API_BASE || 'https://api.sam.gov/opportunities/
 
 // Rate limiting configuration
 // Official Data.gov limits: 1,000 requests per hour across all services
-// Our conservative defaults ensure we stay well within these limits:
-// - 10 calls per user max
-// - 2s between API calls
-// - 5s between users
-// - With 10 users: ~100 total calls over ~4 minutes (well under 1,000/hour)
-// - With 100 users: ~1,000 total calls over ~38 minutes (at official limit)
+// Production: Generous limits for comprehensive results
+// Development: Conservative limits to prevent quota exhaustion during testing
+const isDevelopment = process.env.NODE_ENV !== 'production';
+
 const RATE_LIMIT_CONFIG = {
-  maxApiCallsPerUser: parseInt(process.env.SAM_MAX_API_CALLS_PER_USER || '3'), // Reduced from 10 to 3
-  delayBetweenApiCalls: parseInt(process.env.SAM_DELAY_BETWEEN_API_CALLS || '5000'), // Increased from 2s to 5s
-  delayBetweenUsers: parseInt(process.env.SAM_DELAY_BETWEEN_USERS || '10000'), // Increased from 5s to 10s
-  maxRetries: parseInt(process.env.SAM_MAX_RETRIES || '2'), // Reduced from 3 to 2
-  safetyOffsetThreshold: parseInt(process.env.SAM_SAFETY_OFFSET_THRESHOLD || '500'), // Reduced from 1000 to 500
+  maxApiCallsPerUser: parseInt(process.env.SAM_MAX_API_CALLS_PER_USER || (isDevelopment ? '2' : '8')),
+  delayBetweenApiCalls: parseInt(process.env.SAM_DELAY_BETWEEN_API_CALLS || (isDevelopment ? '3000' : '1000')),
+  delayBetweenUsers: parseInt(process.env.SAM_DELAY_BETWEEN_USERS || (isDevelopment ? '8000' : '3000')),
+  maxRetries: parseInt(process.env.SAM_MAX_RETRIES || '3'),
+  safetyOffsetThreshold: parseInt(process.env.SAM_SAFETY_OFFSET_THRESHOLD || '2000'),
   safetyMinItemsPerPage: parseInt(process.env.SAM_SAFETY_MIN_ITEMS_PER_PAGE || '10')
 };
 
@@ -94,9 +92,14 @@ export async function runOppsDigest({ daysBack = 2 }: { daysBack?: number } = {}
   let cronRunId: number | null = null;
 
   console.log('🔑 Environment check:');
+  console.log('  - NODE_ENV:', process.env.NODE_ENV || 'development');
   console.log('  - RESEND_API_KEY:', process.env.RESEND_API_KEY ? 'SET' : 'MISSING');
   console.log('  - SAM_OPPS_API_KEY:', process.env.SAM_OPPS_API_KEY ? 'SET' : 'MISSING');
   console.log('  - DATABASE_URL:', process.env.DATABASE_URL ? 'SET' : 'MISSING');
+  console.log('⚙️  Rate limiting config:');
+  console.log(`  - Max API calls per user: ${RATE_LIMIT_CONFIG.maxApiCallsPerUser}`);
+  console.log(`  - Records per API call: ${isDevelopment ? 50 : 500}`);
+  console.log(`  - Delay between calls: ${RATE_LIMIT_CONFIG.delayBetweenApiCalls}ms`);
 
   try {
     // Start cron run tracking
@@ -166,7 +169,7 @@ export async function runOppsDigest({ daysBack = 2 }: { daysBack?: number } = {}
       const common = {
         postedFrom: `${postedFrom.getFullYear()}-${(postedFrom.getMonth() + 1).toString().padStart(2, '0')}-${postedFrom.getDate().toString().padStart(2, '0')}`,
         postedTo: `${postedTo.getFullYear()}-${(postedTo.getMonth() + 1).toString().padStart(2, '0')}-${postedTo.getDate().toString().padStart(2, '0')}`,
-        limit: 100, // Reduced from 1000 to 100 to use fewer API quota per call
+        limit: isDevelopment ? 50 : 500, // Conservative for dev testing, reasonable for production
         ptype: 'o,k,p',
         api_key: process.env.SAM_OPPS_API_KEY
       } as const;
