@@ -1,9 +1,9 @@
 import Stripe from 'stripe';
 import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { makeDb, makePool, users } from '../../../lib/index';
+import { makeDb, makePool, users } from '@/lib';
 import { eq } from 'drizzle-orm';
-import { addDevEvent } from '../../../../lib/devFeed';
+import { addDevEvent } from '@/lib/devFeed';
 
 export async function POST(req: Request) {
   const sig = headers().get('stripe-signature');
