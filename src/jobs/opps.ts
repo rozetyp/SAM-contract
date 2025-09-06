@@ -163,9 +163,12 @@ export async function runOppsDigest({ daysBack = 2 }: { daysBack?: number } = {}
         muteTerms: search.muteTerms
       });
 
+    const formatMMDDYYYY = (d: Date) => `${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getDate().toString().padStart(2, '0')}/${d.getFullYear()}`;
+
       const common = {
-        postedFrom: `${postedFrom.getFullYear()}-${(postedFrom.getMonth() + 1).toString().padStart(2, '0')}-${postedFrom.getDate().toString().padStart(2, '0')}`,
-        postedTo: `${postedTo.getFullYear()}-${(postedTo.getMonth() + 1).toString().padStart(2, '0')}-${postedTo.getDate().toString().padStart(2, '0')}`,
+          // SAM.gov expects dates in MM/dd/yyyy format
+          postedFrom: formatMMDDYYYY(postedFrom),
+          postedTo: formatMMDDYYYY(postedTo),
         limit: 200, // Conservative limit to prevent API quota exhaustion
         ptype: 'o,k,p',
         api_key: process.env.SAM_OPPS_API_KEY
