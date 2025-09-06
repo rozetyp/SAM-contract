@@ -27,6 +27,10 @@ pnpm install
 cp .env.example .env.local
 # Fill in your environment variables
 pnpm --filter=web run dev
+
+Settings UI
+- A minimal settings UI is available at /settings. It calls the existing POST /api/settings route to load and save user preferences.
+- To use it locally, start the web server and open http://localhost:3000/settings. Saving preferences requires a user with a paid plan (the API enforces this).
 ```
 
 ### Production Deployment
